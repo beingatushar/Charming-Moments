@@ -37,7 +37,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   return (
     <div className="font-sans">
       {/* Category Filters */}
-      <div className="flex justify-center space-x-4 mb-8">
+      <div className="flex justify-center space-x-4 space-y-2 mb-8 flex-wrap">
         <button
           onClick={() => setSelectedCategory(null)}
           className={`px-6 py-2 rounded-full ${
