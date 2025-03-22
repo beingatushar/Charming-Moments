@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom"; // Import useSearchParams
 import { Product } from "../sampleData";
 import useCartStore from "../store/cartStore";
 import toast from "react-hot-toast";
@@ -9,8 +10,11 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<string>("default"); // State for sorting
+  const [searchParams, setSearchParams] = useSearchParams(); // Hook for query parameters
   const { addToCart } = useCartStore();
+
+  // Get the current sortBy value from query parameters (default to "default")
+  const sortBy = searchParams.get("sortBy") || "default";
 
   // Extract unique categories from the products array
   const categories = Array.from(
@@ -62,6 +66,16 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     toast.success(`${product.name} added to cart!`);
   };
 
+  // Update query parameters when sortBy changes
+  const handleSortChange = (value: string) => {
+    if (value === "default") {
+      searchParams.delete("sortBy"); // Remove sortBy parameter for default
+    } else {
+      searchParams.set("sortBy", value); // Set sortBy parameter
+    }
+    setSearchParams(searchParams); // Update the URL
+  };
+
   return (
     <div className="font-sans">
       {/* Category Filters */}
@@ -95,7 +109,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       <div className="flex justify-center space-x-4 mb-8 flex-wrap">
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
+          onChange={(e) => handleSortChange(e.target.value)} // Update query parameters
           className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         >
           <option value="default">Sort By</option>
