@@ -1,5 +1,5 @@
 // src/store/cartStore.ts
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface CartItem {
   id: string;
@@ -21,14 +21,16 @@ const useCartStore = create<CartState>((set) => ({
   cart: [],
   addToCart: (item) =>
     set((state) => {
-      const existingItem = state.cart.find((cartItem) => cartItem.id === item.id);
+      const existingItem = state.cart.find(
+        (cartItem) => cartItem.id === item.id,
+      );
       if (existingItem) {
         // If item already exists, update the quantity
         return {
           cart: state.cart.map((cartItem) =>
             cartItem.id === item.id
               ? { ...cartItem, quantity: cartItem.quantity + 1 }
-              : cartItem
+              : cartItem,
           ),
         };
       } else {
@@ -43,7 +45,7 @@ const useCartStore = create<CartState>((set) => ({
   updateQuantity: (id, quantity) =>
     set((state) => ({
       cart: state.cart.map((cartItem) =>
-        cartItem.id === id ? { ...cartItem, quantity } : cartItem
+        cartItem.id === id ? { ...cartItem, quantity } : cartItem,
       ),
     })),
   clearCart: () => set({ cart: [] }),

@@ -1,15 +1,15 @@
 // src/pages/ShopPage.tsx
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
-import ProductList from '../components/ProductList';
-import { allProducts } from '../sampleData';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import HeroSection from '../components/HeroSection';
+import React from "react";
+import { useSearchParams } from "react-router-dom";
+import ProductList from "../components/ProductList";
+import { allProducts } from "../sampleData";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import HeroSection from "../components/HeroSection";
 
 const ShopPage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
+  const category = searchParams.get("category");
 
   // Filter products based on category
   const filteredProducts = category

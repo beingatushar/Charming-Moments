@@ -1,8 +1,8 @@
-import React from 'react';
-import useCartStore from '../store/cartStore';
-import { Link } from 'react-router-dom';
-import Header from '../components/Header'; // Import Header
-import Footer from '../components/Footer'; // Import Footer
+import React from "react";
+import useCartStore from "../store/cartStore";
+import { Link } from "react-router-dom";
+import Header from "../components/Header"; // Import Header
+import Footer from "../components/Footer"; // Import Footer
 
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
@@ -10,7 +10,7 @@ const CartPage: React.FC = () => {
   // Calculate total price
   const totalPrice = cart.reduce(
     (total, item) => total + item.price * item.quantity,
-    0
+    0,
   );
 
   return (
@@ -46,7 +46,9 @@ const CartPage: React.FC = () => {
                     className="w-24 h-24 object-cover rounded-lg"
                   />
                   <div className="flex-1 ml-4">
-                    <h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
+                    <h3 className="text-lg font-bold text-gray-800">
+                      {item.name}
+                    </h3>
                     <p className="text-gray-600">Price: Rs {item.price}</p>
                   </div>
                   <div className="flex items-center space-x-4 mt-4 sm:mt-0">
@@ -82,9 +84,7 @@ const CartPage: React.FC = () => {
                 >
                   Clear Cart
                 </button>
-                <button
-                  className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-                >
+                <button className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition duration-300">
                   Checkout
                 </button>
               </div>

@@ -1,8 +1,8 @@
 // src/components/ProductList.tsx
-import React, { useState } from 'react';
-import { Product } from '../sampleData';
-import useCartStore from '../store/cartStore';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { Product } from "../sampleData";
+import useCartStore from "../store/cartStore";
+import toast from "react-hot-toast";
 
 interface ProductListProps {
   products: Product[];
@@ -13,7 +13,9 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const { addToCart } = useCartStore();
 
   // Extract unique categories from the products array
-  const categories = Array.from(new Set(products.map((product) => product.category)));
+  const categories = Array.from(
+    new Set(products.map((product) => product.category)),
+  );
 
   // Filter products based on the selected category
   const filteredProducts = selectedCategory
@@ -26,7 +28,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image || 'https://via.placeholder.com/150',
+      image: product.image || "https://via.placeholder.com/150",
       quantity: 1,
     });
     toast.success(`${product.name} added to cart!`);
@@ -40,8 +42,8 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
           onClick={() => setSelectedCategory(null)}
           className={`px-6 py-2 rounded-full ${
             !selectedCategory
-              ? 'bg-pink-500 text-white'
-              : 'bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300'
+              ? "bg-pink-500 text-white"
+              : "bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300"
           }`}
         >
           All
@@ -52,11 +54,11 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             onClick={() => setSelectedCategory(category)}
             className={`px-6 py-2 rounded-full ${
               selectedCategory === category
-                ? 'bg-pink-500 text-white'
-                : 'bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300'
+                ? "bg-pink-500 text-white"
+                : "bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300"
             }`}
           >
-            {category.replace(/-/g, ' ')}
+            {category.replace(/-/g, " ")}
           </button>
         ))}
       </div>
@@ -74,12 +76,16 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
-              <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
+              <h3 className="text-lg font-bold text-gray-800">
+                {product.name}
+              </h3>
               <p className="text-gray-600">Price: Rs {product.price}</p>
               {product.features && (
                 <ul className="mt-2">
                   {product.features.map((feature, index) => (
-                    <li key={index} className="text-gray-600">• {feature}</li>
+                    <li key={index} className="text-gray-600">
+                      • {feature}
+                    </li>
                   ))}
                 </ul>
               )}

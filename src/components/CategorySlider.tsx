@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
-import 'swiper/swiper-bundle.css';
-import { Product } from '../sampleData';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/swiper-bundle.css";
+import { Product } from "../sampleData";
 
 interface CategorySliderProps {
   category: {
@@ -17,7 +17,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
     <div className="mb-12">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl font-bold text-gray-800">
-          {category.name.replace(/-/g, ' ')}
+          {category.name.replace(/-/g, " ")}
         </h2>
         <Link
           to={`/shop?category=${category.name}`}
@@ -59,7 +59,9 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
+                  <h3 className="text-lg font-bold text-gray-800">
+                    {product.name}
+                  </h3>
                   <p className="text-gray-600">Price: Rs {product.price}</p>
                   <Link
                     to={`/shop?category=${category.name}`}

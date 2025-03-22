@@ -4,7 +4,6 @@ import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import { Product } from "..";
 
-
 const AdminPage: React.FC = () => {
   // State for managing products
   const [products, setProducts] = useState<Product[]>([
@@ -86,8 +85,8 @@ const AdminPage: React.FC = () => {
           prevProducts.map((product) =>
             product.id === editingProductId
               ? { ...product, ...newProduct }
-              : product
-          )
+              : product,
+          ),
         );
         setIsEditing(false);
         setEditingProductId(null);

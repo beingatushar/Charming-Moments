@@ -8,13 +8,15 @@ const generatePrice = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
 
 // Helper function to generate random ratings
-const generateRating = () => parseFloat((Math.random() * (5 - 3.5) + 3.5).toFixed(1));
+const generateRating = () =>
+  parseFloat((Math.random() * (5 - 3.5) + 3.5).toFixed(1));
 
 // Helper function to generate random stock
 const generateStock = () => Math.floor(Math.random() * 20) + 1;
 
 // Helper function to generate random images
-const generateImage = (seed: number) => `https://picsum.photos/seed/${seed}/200`;
+const generateImage = (seed: number) =>
+  `https://picsum.photos/seed/${seed}/200`;
 
 // Product name generators
 const purseNames = [
@@ -74,7 +76,7 @@ const generateProducts = (
   category: string,
   names: string[],
   minPrice: number,
-  maxPrice: number
+  maxPrice: number,
 ): Product[] => {
   return names.map((name, index) => ({
     id: generateId(category.split(" ")[0].toLowerCase(), index),
@@ -86,9 +88,11 @@ const generateProducts = (
     features: ["Handmade", "Eco-friendly", "Unique Design"],
     image: generateImage(index),
     stock: generateStock(),
-    rating:generateRating(),
+    rating: generateRating(),
     // tags: ["new", "popular", "best-seller"][Math.floor(Math.random() * 3)],
-    material: ["Resin", "Fabric", "Leather", "Wax"][Math.floor(Math.random() * 4)],
+    material: ["Resin", "Fabric", "Leather", "Wax"][
+      Math.floor(Math.random() * 4)
+    ],
   }));
 };
 
@@ -97,28 +101,28 @@ export const purseAndWalletProducts: Product[] = generateProducts(
   "Purse and Wallet",
   purseNames,
   500,
-  1500
+  1500,
 );
 
 export const chocolateProducts: Product[] = generateProducts(
   "Chocolate",
   chocolateNames,
   200,
-  800
+  800,
 );
 
 export const resinProducts: Product[] = generateProducts(
   "Resin Product",
   resinNames,
   150,
-  1200
+  1200,
 );
 
 export const candleProducts: Product[] = generateProducts(
   "Candles",
   candleNames,
   100,
-  500
+  500,
 );
 
 // Combine all products into a single array

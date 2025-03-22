@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Import useLocation
-import { FaBars, FaTimes, FaShoppingCart, FaUser } from 'react-icons/fa'; // Import icons
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation
+import { FaBars, FaTimes, FaShoppingCart, FaUser } from "react-icons/fa"; // Import icons
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +17,10 @@ const Header: React.FC = () => {
     <header className="bg-white bg-opacity-90 backdrop-blur-md fixed w-full z-50 shadow-sm">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-pink-500 transition duration-300 text-center">
+        <Link
+          to="/"
+          className="text-2xl font-bold text-gray-800 hover:text-pink-500 transition duration-300 text-center"
+        >
           Charming Moments
         </Link>
 
@@ -26,7 +29,7 @@ const Header: React.FC = () => {
           <Link
             to="/"
             className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive('/') ? 'text-pink-500 font-bold' : ''
+              isActive("/") ? "text-pink-500 font-bold" : ""
             }`}
           >
             Home
@@ -34,7 +37,7 @@ const Header: React.FC = () => {
           <Link
             to="/shop"
             className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive('/shop') ? 'text-pink-500 font-bold' : ''
+              isActive("/shop") ? "text-pink-500 font-bold" : ""
             }`}
           >
             Shop
@@ -42,7 +45,7 @@ const Header: React.FC = () => {
           <Link
             to="/about"
             className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive('/about') ? 'text-pink-500 font-bold' : ''
+              isActive("/about") ? "text-pink-500 font-bold" : ""
             }`}
           >
             About Us
@@ -50,7 +53,7 @@ const Header: React.FC = () => {
           <Link
             to="/contact"
             className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive('/contact') ? 'text-pink-500 font-bold' : ''
+              isActive("/contact") ? "text-pink-500 font-bold" : ""
             }`}
           >
             Contact
@@ -62,7 +65,7 @@ const Header: React.FC = () => {
           <Link
             to="/cart"
             className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive('/cart') ? 'text-pink-500 font-bold' : ''
+              isActive("/cart") ? "text-pink-500 font-bold" : ""
             }`}
           >
             <FaShoppingCart size={20} />
@@ -70,7 +73,7 @@ const Header: React.FC = () => {
           <Link
             to="/admin"
             className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive('/admin') ? 'text-pink-500 font-bold' : ''
+              isActive("/admin") ? "text-pink-500 font-bold" : ""
             }`}
           >
             <FaUser size={20} />
@@ -93,7 +96,7 @@ const Header: React.FC = () => {
             <Link
               to="/"
               className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive('/') ? 'text-pink-500 font-bold' : ''
+                isActive("/") ? "text-pink-500 font-bold" : ""
               }`}
               onClick={toggleMenu}
             >
@@ -102,7 +105,7 @@ const Header: React.FC = () => {
             <Link
               to="/shop"
               className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive('/shop') ? 'text-pink-500 font-bold' : ''
+                isActive("/shop") ? "text-pink-500 font-bold" : ""
               }`}
               onClick={toggleMenu}
             >
@@ -111,7 +114,7 @@ const Header: React.FC = () => {
             <Link
               to="/about"
               className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive('/about') ? 'text-pink-500 font-bold' : ''
+                isActive("/about") ? "text-pink-500 font-bold" : ""
               }`}
               onClick={toggleMenu}
             >
@@ -120,7 +123,7 @@ const Header: React.FC = () => {
             <Link
               to="/contact"
               className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive('/contact') ? 'text-pink-500 font-bold' : ''
+                isActive("/contact") ? "text-pink-500 font-bold" : ""
               }`}
               onClick={toggleMenu}
             >
@@ -130,7 +133,7 @@ const Header: React.FC = () => {
               <Link
                 to="/cart"
                 className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                  isActive('/cart') ? 'text-pink-500 font-bold' : ''
+                  isActive("/cart") ? "text-pink-500 font-bold" : ""
                 }`}
                 onClick={toggleMenu}
               >
@@ -139,7 +142,7 @@ const Header: React.FC = () => {
               <Link
                 to="/admin"
                 className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                  isActive('/admin') ? 'text-pink-500 font-bold' : ''
+                  isActive("/admin") ? "text-pink-500 font-bold" : ""
                 }`}
                 onClick={toggleMenu}
               >

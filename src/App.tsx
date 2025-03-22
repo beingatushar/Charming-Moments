@@ -1,17 +1,17 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import ShopPage from './pages/ShopPage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import { Toaster } from 'react-hot-toast';
-import CartPage from './pages/CartPage';
-import AdminPage from './pages/AdminPage';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import ShopPage from "./pages/ShopPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
+import { Toaster } from "react-hot-toast";
+import CartPage from "./pages/CartPage";
+import AdminPage from "./pages/AdminPage";
 
 const App: React.FC = () => {
   return (
     <Router>
-      <Toaster /> 
+      <Toaster />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />

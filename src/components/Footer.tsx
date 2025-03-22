@@ -1,7 +1,13 @@
 // src/components/Footer.tsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaInstagram, FaFacebook, FaTwitter, FaEnvelope, FaPhone } from 'react-icons/fa'; // Import icons
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  FaInstagram,
+  FaFacebook,
+  FaTwitter,
+  FaEnvelope,
+  FaPhone,
+} from "react-icons/fa"; // Import icons
 
 const Footer: React.FC = () => {
   return (
@@ -10,8 +16,12 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-pink-500">Charming Moments</h3>
-            <p className="text-gray-400">Handcrafted Elegance & Sweet Delights</p>
+            <h3 className="text-2xl font-bold text-pink-500">
+              Charming Moments
+            </h3>
+            <p className="text-gray-400">
+              Handcrafted Elegance & Sweet Delights
+            </p>
             <div className="flex space-x-4">
               <a
                 href="https://instagram.com/charming_moment"
@@ -45,22 +55,34 @@ const Footer: React.FC = () => {
             <h3 className="text-xl font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-400 hover:text-pink-500 transition duration-300">
+                <Link
+                  to="/"
+                  className="text-gray-400 hover:text-pink-500 transition duration-300"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/shop" className="text-gray-400 hover:text-pink-500 transition duration-300">
+                <Link
+                  to="/shop"
+                  className="text-gray-400 hover:text-pink-500 transition duration-300"
+                >
                   Shop
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-400 hover:text-pink-500 transition duration-300">
+                <Link
+                  to="/about"
+                  className="text-gray-400 hover:text-pink-500 transition duration-300"
+                >
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-400 hover:text-pink-500 transition duration-300">
+                <Link
+                  to="/contact"
+                  className="text-gray-400 hover:text-pink-500 transition duration-300"
+                >
                   Contact
                 </Link>
               </li>
@@ -84,7 +106,9 @@ const Footer: React.FC = () => {
 
           {/* Newsletter Subscription */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Subscribe to Our Newsletter</h3>
+            <h3 className="text-xl font-bold mb-4">
+              Subscribe to Our Newsletter
+            </h3>
             <form className="flex flex-col space-y-4">
               <input
                 type="email"
@@ -103,7 +127,10 @@ const Footer: React.FC = () => {
 
         {/* Copyright Section */}
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Charming Moments. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Charming Moments. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>
