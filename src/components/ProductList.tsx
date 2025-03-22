@@ -122,7 +122,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
           onChange={(e) => handleSortChange(e.target.value)} // Update query parameters
           className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
         >
-          <option value="default">Sort By</option>
+          <option value="default">Sort By Default</option>
           <option value="price-low-to-high">Price: Low to High</option>
           <option value="price-high-to-low">Price: High to Low</option>
           <option value="date-added-newest">Date Added: Newest</option>

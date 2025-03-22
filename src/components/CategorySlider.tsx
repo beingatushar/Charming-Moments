@@ -64,7 +64,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
                   </h3>
                   <p className="text-gray-600">Price: Rs {product.price}</p>
                   <Link
-                    to={`/shop?category=${category.name}`}
+                    to={`/product/${product.id}`}
                     className="mt-4 inline-block bg-pink-500 text-white px-4 py-2 rounded-lg"
                   >
                     View More

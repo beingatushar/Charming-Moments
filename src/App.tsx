@@ -7,6 +7,7 @@ import ContactPage from "./pages/ContactPage";
 import { Toaster } from "react-hot-toast";
 import CartPage from "./pages/CartPage";
 import AdminPage from "./pages/AdminPage";
+import ProductPage from "./pages/ProductPage";
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/cart" element={<CartPage />} /> {/* Add CartPage route */}
+        <Route path="/product/:productId" element={<ProductPage />} />
       </Routes>
     </Router>
   );
