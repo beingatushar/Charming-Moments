@@ -1,14 +1,17 @@
 // src/pages/HomePage.tsx
 import React from "react";
-import { allProducts, Product } from "../sampleData";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import CategorySlider from "../components/CategorySlider";
 import useCartStore from "../store/cartStore";
 import toast from "react-hot-toast";
+import useProductStore from "../store/productStore";
+import { Product } from "../types";
 
 const HomePage: React.FC = () => {
+  const { products: allProducts } = useProductStore();
+
   // Dynamically generate categories and their products
   const categories = Array.from(
     new Set(allProducts.map((product) => product.category)),

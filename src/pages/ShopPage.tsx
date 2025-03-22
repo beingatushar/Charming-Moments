@@ -2,15 +2,15 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
-import { allProducts } from "../sampleData";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
+import useProductStore from "../store/productStore";
 
 const ShopPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
-
+  const { products: allProducts } = useProductStore();
   // Filter products based on category
   const filteredProducts = category
     ? allProducts.filter((product) => product.category === category)

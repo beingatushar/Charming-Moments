@@ -1,15 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { allProducts, Product } from "../sampleData";
 import useCartStore from "../store/cartStore";
+import useProductStore from "../store/productStore"; // Import the product store
 import toast from "react-hot-toast";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
-// Mock function to simulate fetching a product by ID
-const fetchProductById = (productId: string): Product | undefined => {
-  return allProducts.find((product) => product.id === productId);
-};
+import { Product } from "../types"; // Import the Product type
 
 // ProductNotFound Component
 const ProductNotFound: React.FC = () => {
@@ -127,9 +123,18 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>(); // Extract productId from URL
   const { addToCart } = useCartStore();
+  const { findById, fetchProducts, products, loading, error } =
+    useProductStore(); // Use the product store
 
   // Fetch the product details based on productId
-  const product = fetchProductById(productId || "");
+  const product = productId ? findById(productId) : undefined;
+
+  // Fetch products when the component mounts
+  useEffect(() => {
+    if (products.length === 0) {
+      fetchProducts(); // Fetch products if the store is empty
+    }
+  }, [fetchProducts, products]);
 
   // Handle "Add to Cart" button click
   const handleAddToCart = () => {

@@ -1,7 +1,7 @@
-import { Link, useSearchParams } from "react-router-dom"; // Import useSearchParams
-import { Product } from "../sampleData";
+import { Link, useSearchParams } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import toast from "react-hot-toast";
+import { Product } from "../types";
 
 interface ProductListProps {
   products: Product[];

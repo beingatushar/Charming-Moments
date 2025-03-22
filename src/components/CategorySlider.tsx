@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/swiper-bundle.css";
-import { Product } from "../sampleData";
+import { Product } from "../types";
 
 interface CategorySliderProps {
   category: {

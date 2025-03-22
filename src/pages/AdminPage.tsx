@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
-import { Product } from "..";
+import { Product } from "../types";
+import useProductStore from "../store/productStore";
 
 // ProductForm Component
 interface ProductFormProps {
@@ -14,7 +15,6 @@ interface ProductFormProps {
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
 }
-
 const ProductForm: React.FC<ProductFormProps> = ({
   newProduct,
   isEditing,
@@ -27,81 +27,172 @@ const ProductForm: React.FC<ProductFormProps> = ({
       <h2 className="text-xl font-bold text-gray-800 mb-4">
         {isEditing ? "Edit Product" : "Add New Product"}
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <input
-          type="text"
-          placeholder="Category"
-          name="category"
-          value={newProduct.category}
-          onChange={onInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
-        <input
-          type="text"
-          placeholder="Product Name"
-          name="name"
-          value={newProduct.name}
-          onChange={onInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
-        <input
-          type="number"
-          placeholder="Price"
-          name="price"
-          value={newProduct.price}
-          onChange={onInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
-        <input
-          type="number"
-          placeholder="Stock"
-          name="stock"
-          value={newProduct.stock}
-          onChange={onInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          name="description"
-          value={newProduct.description}
-          onChange={onInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
-        <input
-          type="text"
-          placeholder="Image URL"
-          name="image"
-          value={newProduct.image}
-          onChange={onInputChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onImageUpload}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-        />
-        {newProduct.image && (
-          <div className="col-span-full">
-            <img
-              src={newProduct.image}
-              alt="Product Preview"
-              className="w-32 h-32 object-cover rounded-lg"
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Category Input */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="category"
+              className="text-sm font-medium text-gray-700 mb-1"
+            >
+              Category
+            </label>
+            <input
+              type="text"
+              id="category"
+              placeholder="Category"
+              name="category"
+              value={newProduct.category}
+              onChange={onInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
             />
           </div>
-        )}
-        <button
-          onClick={onSubmit}
-          className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-        >
-          {isEditing ? "Update Product" : "Add Product"}
-        </button>
-      </div>
+
+          {/* Product Name Input */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="name"
+              className="text-sm font-medium text-gray-700 mb-1"
+            >
+              Product Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              placeholder="Product Name"
+              name="name"
+              value={newProduct.name}
+              onChange={onInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          {/* Price Input */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="price"
+              className="text-sm font-medium text-gray-700 mb-1"
+            >
+              Price
+            </label>
+            <input
+              type="number"
+              id="price"
+              placeholder="Price"
+              name="price"
+              value={newProduct.price}
+              onChange={onInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          {/* Stock Input */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="stock"
+              className="text-sm font-medium text-gray-700 mb-1"
+            >
+              Stock
+            </label>
+            <input
+              type="number"
+              id="stock"
+              placeholder="Stock"
+              name="stock"
+              value={newProduct.stock}
+              onChange={onInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          {/* Description Input */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="description"
+              className="text-sm font-medium text-gray-700 mb-1"
+            >
+              Description
+            </label>
+            <input
+              type="text"
+              id="description"
+              placeholder="Description"
+              name="description"
+              value={newProduct.description}
+              onChange={onInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          {/* Image URL Input */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="image"
+              className="text-sm font-medium text-gray-700 mb-1"
+            >
+              Image URL
+            </label>
+            <input
+              type="text"
+              id="image"
+              placeholder="Image URL"
+              name="image"
+              value={newProduct.image}
+              onChange={onInputChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          {/* Image Upload Input */}
+          <div className="flex flex-col">
+            <label
+              htmlFor="image-upload"
+              className="text-sm font-medium text-gray-700 mb-1"
+            >
+              Upload Image
+            </label>
+            <input
+              type="file"
+              id="image-upload"
+              accept="image/*"
+              onChange={onImageUpload}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+            />
+          </div>
+
+          {/* Image Preview */}
+          {newProduct.image && (
+            <div className="col-span-full">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Image Preview
+              </label>
+              <img
+                src={newProduct.image}
+                alt="Product Preview"
+                className="w-32 h-32 object-cover rounded-lg"
+              />
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <div className="col-span-full">
+            <button
+              type="submit"
+              className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+            >
+              {isEditing ? "Update Product" : "Add Product"}
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };
-
 // ProductTable Component
 interface ProductTableProps {
   products: Product[];
@@ -175,43 +266,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
 
 // AdminPage Component
 const AdminPage: React.FC = () => {
-  // State for managing products
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: "1",
-      category: "Accessories",
-      name: "Resin Bookmark",
-      description: "Handmade resin bookmark with floral designs.",
-      price: 200,
-      stock: 10,
-      image: "https://example.com/resin-bookmark.jpg",
-      rating: 4.5,
-      tags: ["handmade", "resin", "bookmark"],
-      material: "Resin",
-    },
-    {
-      id: "2",
-      category: "Food",
-      name: "Handmade Chocolate Box",
-      description: "Assorted handmade chocolates in a decorative box.",
-      price: 500,
-      stock: 15,
-      image: "https://example.com/chocolate-box.jpg",
-      rating: 4.7,
-      tags: ["chocolate", "handmade", "gift"],
-    },
-    {
-      id: "3",
-      category: "Home Decor",
-      name: "Scented Soy Candle",
-      description: "Eco-friendly soy candle with lavender scent.",
-      price: 300,
-      stock: 20,
-      image: "https://example.com/soy-candle.jpg",
-      rating: 4.8,
-      tags: ["candle", "eco-friendly", "lavender"],
-    },
-  ]);
+  const { products, createProduct, updateProduct, deleteProduct } =
+    useProductStore();
 
   // State for adding/editing a product
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
@@ -259,19 +315,12 @@ const AdminPage: React.FC = () => {
     ) {
       if (isEditing && editingProductId) {
         // Update existing product
-        setProducts((prevProducts) =>
-          prevProducts.map((product) =>
-            product.id === editingProductId
-              ? { ...product, ...newProduct }
-              : product,
-          ),
-        );
+        updateProduct(editingProductId, newProduct);
         setIsEditing(false);
         setEditingProductId(null);
       } else {
         // Add new product
-        const newId = (products.length + 1).toString(); // Generate a new ID
-        setProducts([...products, { ...newProduct, id: newId } as Product]);
+        createProduct(newProduct);
       }
       // Reset form
       setNewProduct({
@@ -287,7 +336,7 @@ const AdminPage: React.FC = () => {
 
   // Function to delete a product
   const handleDeleteProduct = (id: string) => {
-    setProducts(products.filter((product) => product.id !== id));
+    deleteProduct(id);
   };
 
   // Function to populate form for editing
