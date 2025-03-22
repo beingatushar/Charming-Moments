@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom"; // Import useSearchParams
 import { Product } from "../sampleData";
 import useCartStore from "../store/cartStore";
@@ -9,12 +9,12 @@ interface ProductListProps {
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams(); // Hook for query parameters
   const { addToCart } = useCartStore();
 
-  // Get the current sortBy value from query parameters (default to "default")
+  // Get the current sortBy and category values from query parameters
   const sortBy = searchParams.get("sortBy") || "default";
+  const selectedCategory = searchParams.get("category") || null;
 
   // Extract unique categories from the products array
   const categories = Array.from(
@@ -76,12 +76,22 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     setSearchParams(searchParams); // Update the URL
   };
 
+  // Update query parameters when category changes
+  const handleCategoryChange = (category: string | null) => {
+    if (category === null) {
+      searchParams.delete("category"); // Remove category parameter for "All"
+    } else {
+      searchParams.set("category", category); // Set category parameter
+    }
+    setSearchParams(searchParams); // Update the URL
+  };
+
   return (
     <div className="font-sans">
       {/* Category Filters */}
       <div className="flex justify-center space-x-4 space-y-2 mb-8 flex-wrap">
         <button
-          onClick={() => setSelectedCategory(null)}
+          onClick={() => handleCategoryChange(null)} // Update category in query params
           className={`px-6 py-2 rounded-full ${
             !selectedCategory
               ? "bg-pink-500 text-white"
@@ -93,7 +103,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         {categories.map((category) => (
           <button
             key={category}
-            onClick={() => setSelectedCategory(category)}
+            onClick={() => handleCategoryChange(category)} // Update category in query params
             className={`px-6 py-2 rounded-full ${
               selectedCategory === category
                 ? "bg-pink-500 text-white"
