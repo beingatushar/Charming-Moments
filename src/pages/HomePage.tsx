@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
           <CategorySlider
             key={category.name}
             category={category}
-            handleAddToCart={() => {}}
+            handleAddToCart={(product) => handleAddToCart(product)}
           />
         ))}
       </section>
