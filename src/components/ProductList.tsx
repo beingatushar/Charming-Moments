@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom"; // Import useSearchParams
 import { Product } from "../sampleData";
 import useCartStore from "../store/cartStore";
