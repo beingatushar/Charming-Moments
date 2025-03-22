@@ -19,7 +19,7 @@ const ContactPage: React.FC = () => {
       {/* Contact Form */}
       <section className="container mx-auto px-6 py-8">
         <h2 className="text-3xl font-bold text-center text-gray-800">
-          Get in Touch
+          Get in Touch With Us
         </h2>
         <div className="mt-8 max-w-2xl mx-auto">
           <form className="space-y-6">
