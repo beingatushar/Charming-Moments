@@ -75,7 +75,8 @@ const AdminPage: React.FC = () => {
     if (
       newProduct.name &&
       newProduct.category &&
-      newProduct.price! > 0 &&
+      newProduct.price &&
+      newProduct.price > 0 &&
       newProduct.stock !== undefined &&
       newProduct.stock >= 0
     ) {
