@@ -4,6 +4,176 @@ import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import { Product } from "..";
 
+// ProductForm Component
+interface ProductFormProps {
+  newProduct: Partial<Product>;
+  isEditing: boolean;
+  onInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: () => void;
+}
+
+const ProductForm: React.FC<ProductFormProps> = ({
+  newProduct,
+  isEditing,
+  onInputChange,
+  onImageUpload,
+  onSubmit,
+}) => {
+  return (
+    <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
+      <h2 className="text-xl font-bold text-gray-800 mb-4">
+        {isEditing ? "Edit Product" : "Add New Product"}
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <input
+          type="text"
+          placeholder="Category"
+          name="category"
+          value={newProduct.category}
+          onChange={onInputChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        <input
+          type="text"
+          placeholder="Product Name"
+          name="name"
+          value={newProduct.name}
+          onChange={onInputChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        <input
+          type="number"
+          placeholder="Price"
+          name="price"
+          value={newProduct.price}
+          onChange={onInputChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        <input
+          type="number"
+          placeholder="Stock"
+          name="stock"
+          value={newProduct.stock}
+          onChange={onInputChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        <input
+          type="text"
+          placeholder="Description"
+          name="description"
+          value={newProduct.description}
+          onChange={onInputChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        <input
+          type="text"
+          placeholder="Image URL"
+          name="image"
+          value={newProduct.image}
+          onChange={onInputChange}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={onImageUpload}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+        {newProduct.image && (
+          <div className="col-span-full">
+            <img
+              src={newProduct.image}
+              alt="Product Preview"
+              className="w-32 h-32 object-cover rounded-lg"
+            />
+          </div>
+        )}
+        <button
+          onClick={onSubmit}
+          className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+        >
+          {isEditing ? "Update Product" : "Add Product"}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ProductTable Component
+interface ProductTableProps {
+  products: Product[];
+  onEdit: (product: Product) => void;
+  onDelete: (id: string) => void;
+}
+
+const ProductTable: React.FC<ProductTableProps> = ({
+  products,
+  onEdit,
+  onDelete,
+}) => {
+  return (
+    <div className="bg-white shadow-lg rounded-lg p-6">
+      <h2 className="text-xl font-bold text-gray-800 mb-4">Manage Products</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="px-4 py-2 text-left">ID</th>
+              <th className="px-4 py-2 text-left">Name</th>
+              <th className="px-4 py-2 text-left">Category</th>
+              <th className="px-4 py-2 text-left">Price</th>
+              <th className="px-4 py-2 text-left">Stock</th>
+              <th className="px-4 py-2 text-left">Image</th>
+              <th className="px-4 py-2 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr
+                key={product.id}
+                className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+              >
+                <td className="px-4 py-2">{product.id}</td>
+                <td className="px-4 py-2">{product.name}</td>
+                <td className="px-4 py-2">{product.category}</td>
+                <td className="px-4 py-2">Rs {product.price}</td>
+                <td className="px-4 py-2">{product.stock}</td>
+                <td className="px-4 py-2">
+                  {product.image && (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-16 h-16 object-cover rounded-lg"
+                    />
+                  )}
+                </td>
+                <td className="px-4 py-2 space-x-2">
+                  <button
+                    onClick={() => onEdit(product)}
+                    className="text-blue-500 hover:text-blue-700 transition duration-300"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => onDelete(product.id)}
+                    className="text-red-500 hover:text-red-700 transition duration-300"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// AdminPage Component
 const AdminPage: React.FC = () => {
   // State for managing products
   const [products, setProducts] = useState<Product[]>([
@@ -56,6 +226,14 @@ const AdminPage: React.FC = () => {
   // State to track if we're editing an existing product
   const [isEditing, setIsEditing] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
+
+  // Function to handle input changes
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setNewProduct({ ...newProduct, [name]: value });
+  };
 
   // Function to handle image file upload
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,153 +307,20 @@ const AdminPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Admin Panel</h1>
 
           {/* Add/Edit Product Form */}
-          <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              {isEditing ? "Edit Product" : "Add New Product"}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <input
-                type="text"
-                placeholder="Category"
-                value={newProduct.category}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, category: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              <input
-                type="text"
-                placeholder="Product Name"
-                value={newProduct.name}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, name: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                value={newProduct.price}
-                onChange={(e) =>
-                  setNewProduct({
-                    ...newProduct,
-                    price: parseFloat(e.target.value),
-                  })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              <input
-                type="number"
-                placeholder="Stock"
-                value={newProduct.stock}
-                onChange={(e) =>
-                  setNewProduct({
-                    ...newProduct,
-                    stock: parseInt(e.target.value),
-                  })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              <input
-                type="text"
-                placeholder="Description"
-                value={newProduct.description}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, description: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              <input
-                type="text"
-                placeholder="Image URL"
-                value={newProduct.image}
-                onChange={(e) =>
-                  setNewProduct({ ...newProduct, image: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              {newProduct.image && (
-                <div className="col-span-full">
-                  <img
-                    src={newProduct.image}
-                    alt="Product Preview"
-                    className="w-32 h-32 object-cover rounded-lg"
-                  />
-                </div>
-              )}
-              <button
-                onClick={handleAddOrUpdateProduct}
-                className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-              >
-                {isEditing ? "Update Product" : "Add Product"}
-              </button>
-            </div>
-          </div>
+          <ProductForm
+            newProduct={newProduct}
+            isEditing={isEditing}
+            onInputChange={handleInputChange}
+            onImageUpload={handleImageUpload}
+            onSubmit={handleAddOrUpdateProduct}
+          />
 
           {/* Product List */}
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Manage Products
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-4 py-2 text-left">ID</th>
-                    <th className="px-4 py-2 text-left">Name</th>
-                    <th className="px-4 py-2 text-left">Category</th>
-                    <th className="px-4 py-2 text-left">Price</th>
-                    <th className="px-4 py-2 text-left">Stock</th>
-                    <th className="px-4 py-2 text-left">Image</th>
-                    <th className="px-4 py-2 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product) => (
-                    <tr
-                      key={product.id}
-                      className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
-                    >
-                      <td className="px-4 py-2">{product.id}</td>
-                      <td className="px-4 py-2">{product.name}</td>
-                      <td className="px-4 py-2">{product.category}</td>
-                      <td className="px-4 py-2">Rs {product.price}</td>
-                      <td className="px-4 py-2">{product.stock}</td>
-                      <td className="px-4 py-2">
-                        {product.image && (
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-16 h-16 object-cover rounded-lg"
-                          />
-                        )}
-                      </td>
-                      <td className="px-4 py-2 space-x-2">
-                        <button
-                          onClick={() => handleEditProduct(product)}
-                          className="text-blue-500 hover:text-blue-700 transition duration-300"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="text-red-500 hover:text-red-700 transition duration-300"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <ProductTable
+            products={products}
+            onEdit={handleEditProduct}
+            onDelete={handleDeleteProduct}
+          />
         </main>
 
         {/* Footer */}

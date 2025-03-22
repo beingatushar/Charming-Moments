@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom"; // Import useSearchParams
+import { Link, useSearchParams } from "react-router-dom"; // Import useSearchParams
 import { Product } from "../sampleData";
 import useCartStore from "../store/cartStore";
 import toast from "react-hot-toast";
@@ -10,6 +10,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const [searchParams, setSearchParams] = useSearchParams(); // Hook for query parameters
+
   const { addToCart } = useCartStore();
 
   // Get the current sortBy and category values from query parameters
@@ -54,18 +55,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     }
   });
 
-  // Handle "Add to Cart" button click
-  const handleAddToCart = (product: Product) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image || "https://via.placeholder.com/150",
-      quantity: 1,
-    });
-    toast.success(`${product.name} added to cart!`);
-  };
-
   // Update query parameters when sortBy changes
   const handleSortChange = (value: string) => {
     if (value === "default") {
@@ -85,7 +74,16 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     }
     setSearchParams(searchParams); // Update the URL
   };
-
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image || "https://via.placeholder.com/150",
+      quantity: 1,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
   return (
     <div className="font-sans">
       {/* Category Filters */}
@@ -159,12 +157,20 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                   ))}
                 </ul>
               )}
-              <button
-                onClick={() => handleAddToCart(product)}
-                className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-              >
-                Add to Cart
-              </button>
+              <div className="flex space-x-4">
+                <Link
+                  to={`/product/${product.id}`}
+                  className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg text-center hover:bg-pink-600 transition duration-300"
+                >
+                  View
+                </Link>
+                <button
+                  onClick={() => handleAddToCart(product)}
+                  className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+                >
+                  Add to Cart
+                </button>
+              </div>
             </div>
           </div>
         ))}

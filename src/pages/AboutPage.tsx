@@ -3,7 +3,36 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 
-const AboutPage: React.FC = () => {
+// TeamMember Component
+interface TeamMemberProps {
+  member: {
+    id: number;
+    name: string;
+    role: string;
+    image: string;
+    description: string;
+  };
+}
+
+const TeamMember: React.FC<TeamMemberProps> = ({ member }) => {
+  return (
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden text-center">
+      <img
+        src={member.image}
+        alt={member.name}
+        className="w-full h-48 object-cover"
+      />
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-800">{member.name}</h3>
+        <p className="text-gray-600 mt-2">{member.role}</p>
+        <p className="text-gray-600 mt-4">{member.description}</p>
+      </div>
+    </div>
+  );
+};
+
+// TeamSection Component
+const TeamSection: React.FC = () => {
   // Team members data
   const teamMembers = [
     {
@@ -41,6 +70,46 @@ const AboutPage: React.FC = () => {
   ];
 
   return (
+    <section className="bg-gray-50 py-12">
+      <div className="container mx-auto px-6">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Meet Our Team
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {teamMembers.map((member) => (
+            <TeamMember key={member.id} member={member} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// AboutContent Component
+const AboutContent: React.FC = () => {
+  return (
+    <section className="container mx-auto px-6 py-12">
+      <h2 className="text-3xl font-bold text-center text-gray-800">
+        Our Story
+      </h2>
+      <div className="mt-8 text-center text-gray-600 max-w-2xl mx-auto">
+        <p>
+          At Charming Moments, we blend creativity with passion to bring you
+          unique resin crafts and delectable chocolates. Our mission is to
+          create moments of joy and elegance through our handcrafted products.
+        </p>
+        <p className="mt-4">
+          Founded in 2023, we are a small team of artisans dedicated to
+          delivering high-quality, handmade items that you'll love.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+// AboutPage Component
+const AboutPage: React.FC = () => {
+  return (
     <div className="font-sans">
       {/* Header */}
       <Header />
@@ -52,52 +121,10 @@ const AboutPage: React.FC = () => {
       />
 
       {/* About Content */}
-      <section className="container mx-auto px-6 py-12">
-        <h2 className="text-3xl font-bold text-center text-gray-800">
-          Our Story
-        </h2>
-        <div className="mt-8 text-center text-gray-600 max-w-2xl mx-auto">
-          <p>
-            At Charming Moments, we blend creativity with passion to bring you
-            unique resin crafts and delectable chocolates. Our mission is to
-            create moments of joy and elegance through our handcrafted products.
-          </p>
-          <p className="mt-4">
-            Founded in 2023, we are a small team of artisans dedicated to
-            delivering high-quality, handmade items that you'll love.
-          </p>
-        </div>
-      </section>
+      <AboutContent />
 
       {/* Team Section */}
-      <section className="bg-gray-50 py-12">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-            Meet Our Team
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member) => (
-              <div
-                key={member.id}
-                className="bg-white shadow-lg rounded-lg overflow-hidden text-center"
-              >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-800">
-                    {member.name}
-                  </h3>
-                  <p className="text-gray-600 mt-2">{member.role}</p>
-                  <p className="text-gray-600 mt-4">{member.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TeamSection />
 
       {/* Footer */}
       <Footer />

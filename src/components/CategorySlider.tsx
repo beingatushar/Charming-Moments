@@ -10,9 +10,13 @@ interface CategorySliderProps {
     name: string;
     products: Product[];
   };
+  handleAddToCart: (product: Product) => void; // Add handleAddToCart prop
 }
 
-const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
+const CategorySlider: React.FC<CategorySliderProps> = ({
+  category,
+  handleAddToCart,
+}) => {
   return (
     <div className="mb-12">
       <div className="flex justify-between items-center mb-4">
@@ -63,12 +67,23 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
                     {product.name}
                   </h3>
                   <p className="text-gray-600">Price: Rs {product.price}</p>
-                  <Link
-                    to={`/product/${product.id}`}
-                    className="mt-4 inline-block bg-pink-500 text-white px-4 py-2 rounded-lg"
-                  >
-                    View More
-                  </Link>
+                  <div className="flex space-x-4">
+                    <Link
+                      to={`/product/${product.id}`}
+                      className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg text-center hover:bg-pink-600 transition duration-300"
+                    >
+                      View
+                    </Link>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault(); // Prevent default behavior
+                        handleAddToCart(product); // Call handleAddToCart
+                      }}
+                      className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </SwiperSlide>
