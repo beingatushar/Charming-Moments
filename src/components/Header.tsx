@@ -68,9 +68,9 @@ const Header: React.FC = () => {
             <FaShoppingCart size={20} />
           </Link>
           <Link
-            to="/profile"
+            to="/admin"
             className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive('/profile') ? 'text-pink-500 font-bold' : ''
+              isActive('/admin') ? 'text-pink-500 font-bold' : ''
             }`}
           >
             <FaUser size={20} />
@@ -137,9 +137,9 @@ const Header: React.FC = () => {
                 <FaShoppingCart size={20} />
               </Link>
               <Link
-                to="/profile"
+                to="/admin"
                 className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                  isActive('/profile') ? 'text-pink-500 font-bold' : ''
+                  isActive('/admin') ? 'text-pink-500 font-bold' : ''
                 }`}
                 onClick={toggleMenu}
               >
