@@ -11,7 +11,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ title, backgroundImage }) => 
     <section className="bg-cover bg-center h-96" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className="flex items-center justify-center h-full bg-black bg-opacity-50">
         <div className="text-center">
-          <h1 className="text-5xl font-bold text-white">{title}</h1>
+          <h1 className="text-5xl font-bold text-white text-center">{title}</h1>
         </div>
       </div>
     </section>
