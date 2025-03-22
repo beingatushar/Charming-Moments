@@ -1,4 +1,5 @@
 export interface Product {
+  dateAdded: string;
   id: string;
   category: string;
   name: string;

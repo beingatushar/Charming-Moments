@@ -1,4 +1,3 @@
-// src/components/ProductList.tsx
 import React, { useState } from "react";
 import { Product } from "../sampleData";
 import useCartStore from "../store/cartStore";
@@ -10,6 +9,7 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<string>("default"); // State for sorting
   const { addToCart } = useCartStore();
 
   // Extract unique categories from the products array
@@ -21,6 +21,34 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
     : products;
+
+  // Sort products based on the selected filter
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortBy) {
+      case "price-low-to-high":
+        return a.price - b.price;
+      case "price-high-to-low":
+        return b.price - a.price;
+      case "date-added-newest":
+        return (
+          new Date(b.dateAdded || "").getTime() -
+          new Date(a.dateAdded || "").getTime()
+        );
+      case "date-added-oldest":
+        return (
+          new Date(a.dateAdded || "").getTime() -
+          new Date(b.dateAdded || "").getTime()
+        );
+      case "rating-high-to-low":
+        return (b.rating || 0) - (a.rating || 0);
+      case "name-a-z":
+        return a.name.localeCompare(b.name);
+      case "name-z-a":
+        return b.name.localeCompare(a.name);
+      default:
+        return 0;
+    }
+  });
 
   // Handle "Add to Cart" button click
   const handleAddToCart = (product: Product) => {
@@ -63,9 +91,27 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         ))}
       </div>
 
+      {/* Sorting Filters */}
+      <div className="flex justify-center space-x-4 mb-8 flex-wrap">
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        >
+          <option value="default">Sort By</option>
+          <option value="price-low-to-high">Price: Low to High</option>
+          <option value="price-high-to-low">Price: High to Low</option>
+          <option value="date-added-newest">Date Added: Newest</option>
+          <option value="date-added-oldest">Date Added: Oldest</option>
+          <option value="rating-high-to-low">Rating: High to Low</option>
+          <option value="name-a-z">Name: A-Z</option>
+          <option value="name-z-a">Name: Z-A</option>
+        </select>
+      </div>
+
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => (
+        {sortedProducts.map((product) => (
           <div
             key={product.id}
             className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
@@ -90,7 +136,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
                 </ul>
               )}
               <button
-                onClick={() => handleAddToCart(product)} // Add to cart handler
+                onClick={() => handleAddToCart(product)}
                 className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
               >
                 Add to Cart
