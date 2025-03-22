@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css'; // Import Swiper styles
 import { resinProducts, purseAndWalletProducts } from '../sampleData';
+import Navbar from '../components/Header';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 const HomePage: React.FC = () => {
   // Define categories and their products
@@ -20,18 +23,9 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="font-sans">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-gray-800">Charming Moments</div>
-          <nav className="space-x-4">
-            <Link to="/" className="text-gray-800 hover:text-gray-600">Home</Link>
-            <Link to="/shop" className="text-gray-800 hover:text-gray-600">Shop</Link>
-            <Link to="/about" className="text-gray-800 hover:text-gray-600">About Us</Link>
-            <Link to="/contact" className="text-gray-800 hover:text-gray-600">Contact</Link>
-          </nav>
-        </div>
-      </header>
+      {/* Navbar */}
+      
+      <Header/>
 
       {/* Hero Section */}
       <section className="bg-cover bg-center h-96" style={{ backgroundImage: "url('https://via.placeholder.com/1200x400')" }}>
@@ -88,30 +82,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white mt-8">
-        <div className="container mx-auto px-6 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-lg font-bold">Charming Moments</h3>
-              <p className="mt-2 text-gray-400">Handcrafted Elegance & Sweet Delights</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold">Quick Links</h3>
-              <ul className="mt-2 space-y-2">
-                <li><Link to="/" className="text-gray-400 hover:text-white">Home</Link></li>
-                <li><Link to="/shop" className="text-gray-400 hover:text-white">Shop</Link></li>
-                <li><Link to="/about" className="text-gray-400 hover:text-white">About Us</Link></li>
-                <li><Link to="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold">Contact Us</h3>
-              <p className="mt-2 text-gray-400">Email: info@charmingmoments.com</p>
-              <p className="text-gray-400">Phone: 8368580432</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

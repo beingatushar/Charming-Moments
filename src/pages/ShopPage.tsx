@@ -1,8 +1,9 @@
-// src/pages/ShopPage.tsx
 import React from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import ProductList from '../components/ProductList';
 import { resinProducts, purseAndWalletProducts } from '../sampleData';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const ShopPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -19,50 +20,66 @@ const ShopPage: React.FC = () => {
     : allProducts;
 
   return (
-    <div className="font-sans">
-      <header className="bg-white shadow">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-gray-800">Charming Moments</div>
-          <nav className="space-x-4">
-            <Link to="/" className="text-gray-800 hover:text-gray-600">Home</Link>
-            <Link to="/shop" className="text-gray-800 hover:text-gray-600">Shop</Link>
-            <Link to="/about" className="text-gray-800 hover:text-gray-600">About Us</Link>
-            <Link to="/contact" className="text-gray-800 hover:text-gray-600">Contact</Link>
-          </nav>
-        </div>
-      </header>
+    <div className="font-sans bg-gray-50 min-h-screen">
+      {/* Header */}
+      <Header />
 
+      {/* Hero Section */}
+      <section className="bg-cover bg-center h-64" style={{ backgroundImage: "url('https://via.placeholder.com/1200x400')" }}>
+        <div className="flex items-center justify-center h-full bg-black bg-opacity-50">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-white">Shop Our Collection</h1>
+            <p className="mt-2 text-xl text-gray-200">Discover Handmade Elegance & Sweet Delights</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Category Filters */}
       <section className="container mx-auto px-6 py-8">
-        <h2 className="text-3xl font-bold text-center text-gray-800">
+        <div className="flex justify-center space-x-4">
+          <Link
+            to="/shop"
+            className={`px-6 py-2 rounded-full ${
+              !category
+                ? 'bg-pink-500 text-white'
+                : 'bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300'
+            }`}
+          >
+            All
+          </Link>
+          <Link
+            to="/shop?category=resin-products"
+            className={`px-6 py-2 rounded-full ${
+              category === 'resin-products'
+                ? 'bg-pink-500 text-white'
+                : 'bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300'
+            }`}
+          >
+            Resin Products
+          </Link>
+          <Link
+            to="/shop?category=purse-and-wallets"
+            className={`px-6 py-2 rounded-full ${
+              category === 'purse-and-wallets'
+                ? 'bg-pink-500 text-white'
+                : 'bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300'
+            }`}
+          >
+            Purse & Wallets
+          </Link>
+        </div>
+      </section>
+
+      {/* Product List */}
+      <section className="container mx-auto px-6 py-8">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           {category ? `${category.replace(/-/g, ' ')}` : 'Shop All Products'}
         </h2>
         <ProductList products={filteredProducts} />
       </section>
 
-      <footer className="bg-gray-800 text-white mt-8">
-        <div className="container mx-auto px-6 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-lg font-bold">Charming Moments</h3>
-              <p className="mt-2 text-gray-400">Handcrafted Elegance & Sweet Delights</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold">Quick Links</h3>
-              <ul className="mt-2 space-y-2">
-                <li><Link to="/" className="text-gray-400 hover:text-white">Home</Link></li>
-                <li><Link to="/shop" className="text-gray-400 hover:text-white">Shop</Link></li>
-                <li><Link to="/about" className="text-gray-400 hover:text-white">About Us</Link></li>
-                <li><Link to="/contact" className="text-gray-400 hover:text-white">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold">Contact Us</h3>
-              <p className="mt-2 text-gray-400">Email: info@charmingmoments.com</p>
-              <p className="text-gray-400">Phone: 8368580432</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
