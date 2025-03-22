@@ -1,5 +1,5 @@
 export interface Product {
-  dateAdded: string;
+  dateAdded?: string;
   id: string;
   category: string;
   name: string;
