@@ -95,7 +95,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li className="flex items-center space-x-2 text-gray-400">
                 <FaEnvelope className="text-pink-500" />
-                <span>info@charmingmoments.com</span>
+                <span>charmingmomentsbypooja310777@gmail.com</span>
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
                 <FaPhone className="text-pink-500" />
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Newsletter Subscription */}
-          <div>
+          {/* <div>
             <h3 className="text-xl font-bold mb-4">
               Subscribe to Our Newsletter
             </h3>
@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
                 Subscribe
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
 
         {/* Copyright Section */}

@@ -75,7 +75,7 @@ const ContactPage: React.FC = () => {
       {/* Hero Section */}
       <HeroSection
         title="Contact Us"
-        backgroundImage="https://via.placeholder.com/1200x400"
+        backgroundImage="https://img.freepik.com/free-photo/vintage-pink-telephone-composition_23-2148913955.jpg"
       />
 
       {/* Contact Form */}

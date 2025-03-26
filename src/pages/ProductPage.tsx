@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import useProductStore from "../store/productStore"; // Import the product store
@@ -123,19 +123,25 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>(); // Extract productId from URL
   const { addToCart } = useCartStore();
-  const { findById, fetchProducts, products, loading, error } =
-    useProductStore(); // Use the product store
+  const { findById, loading, error } = useProductStore();
+  const [product, setProduct] = useState<Product | undefined>(undefined);
 
-  // Fetch the product details based on productId
-  const product = productId ? findById(productId) : undefined;
-
-  // Fetch products when the component mounts
+  // Fetch the product details when productId changes
   useEffect(() => {
-    if (products.length === 0) {
-      fetchProducts(); // Fetch products if the store is empty
-    }
-  }, [fetchProducts, products]);
+    const loadProduct = async () => {
+      if (!productId) return;
 
+      try {
+        const fetchedProduct = await findById(productId);
+        setProduct(fetchedProduct);
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        // Optionally set error state for UI feedback
+      }
+    };
+
+    loadProduct();
+  }, [productId, findById]);
   // Handle "Add to Cart" button click
   const handleAddToCart = () => {
     if (product) {

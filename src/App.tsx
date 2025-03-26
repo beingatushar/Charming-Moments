@@ -8,13 +8,8 @@ import { Toaster } from "react-hot-toast";
 import CartPage from "./pages/CartPage";
 import AdminPage from "./pages/AdminPage";
 import ProductPage from "./pages/ProductPage";
-import useProductStore from "./store/productStore";
 
 const App: React.FC = () => {
-  const { fetchProducts, products } = useProductStore();
-  useEffect(() => {
-    fetchProducts();
-  }, [products]);
   return (
     <Router>
       <Toaster />

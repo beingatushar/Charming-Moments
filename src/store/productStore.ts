@@ -1,127 +1,111 @@
 import { create } from "zustand";
-import { Product } from "../types"; // Define your Product type
+import { Product } from "../types";
+import { BACKEND_URL } from "../constants";
+import axios, { AxiosError } from "axios";
 
 interface ProductStore {
-  products: Product[];
   loading: boolean;
   error: string | null;
-  hasFetched: boolean;
-  fetchProducts: () => Promise<void>;
-  findById: (id: string) => Product | undefined;
-  deleteProduct: (id: string) => Promise<void>;
+  fetchAllProducts: () => Promise<Product[]>;
+  findById: (id: string) => Promise<Product>;
+  deleteProduct: (id: string) => Promise<string>;
   updateProduct: (
     id: string,
     updatedProduct: Partial<Product>,
-  ) => Promise<void>;
-  createProduct: (newProduct: Partial<Product>) => Promise<void>;
+  ) => Promise<Product>;
+  createProduct: (newProduct: Partial<Product>) => Promise<Product>;
 }
 
-const useProductStore = create<ProductStore>((set, get) => ({
-  products: [],
+interface ApiError {
+  message: string;
+}
+
+const useProductStore = create<ProductStore>((set) => ({
   loading: false,
   error: null,
-  hasFetched: false,
 
-  // Function to fetch products from the API
-  fetchProducts: async () => {
-    const { hasFetched } = get();
-    if (hasFetched) return;
-
+  fetchAllProducts: async () => {
     set({ loading: true, error: null });
-
     try {
-      const response = await fetch("http://localhost:3000/api/products");
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
-      const data = await response.json();
-      set({ products: data, loading: false, hasFetched: true });
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+      const response = await axios.get<Product[]>(
+        `${BACKEND_URL}/api/products`,
+      );
+      set({ loading: false });
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const errorMessage = err.response?.data?.message || err.message;
+      set({ error: errorMessage, loading: false });
+      throw new Error(errorMessage);
     }
   },
 
-  // Function to find a product by ID
-  findById: (id: string) => {
-    const { products } = get();
-    return products.find((product) => product.id === id);
+  findById: async (id: string) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await axios.get<Product>(
+        `${BACKEND_URL}/api/products/${id}`,
+      );
+      set({ loading: false });
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const errorMessage = err.response?.data?.message || err.message;
+      set({ error: errorMessage, loading: false });
+      throw new Error(errorMessage);
+    }
   },
 
-  // Function to create a new product
   createProduct: async (newProduct: Partial<Product>) => {
     set({ loading: true, error: null });
-
     try {
-      const response = await fetch("http://localhost:3000/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProduct),
-      });
+      // If no ID provided, let the backend generate one
+      const productToCreate = newProduct.id
+        ? newProduct
+        : { ...newProduct, id: "temp-here" };
 
-      if (!response.ok) {
-        throw new Error("Failed to create product");
-      }
-
-      const createdProduct = await response.json();
-      set((state) => ({
-        products: [...state.products, createdProduct],
-        loading: false,
-      }));
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+      const response = await axios.post<Product>(
+        `${BACKEND_URL}/api/products`,
+        productToCreate,
+      );
+      set({ loading: false });
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const errorMessage = err.response?.data?.message || err.message;
+      set({ error: errorMessage, loading: false });
+      throw new Error(errorMessage);
     }
   },
 
-  // Function to update a product
   updateProduct: async (id: string, updatedProduct: Partial<Product>) => {
     set({ loading: true, error: null });
-
     try {
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedProduct),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update product");
-      }
-
-      const updatedData = await response.json();
-      set((state) => ({
-        products: state.products.map((product) =>
-          product.id === id ? updatedData : product,
-        ),
-        loading: false,
-      }));
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+      const response = await axios.put<Product>(
+        `${BACKEND_URL}/api/products/${id}`,
+        updatedProduct,
+      );
+      set({ loading: false });
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const errorMessage = err.response?.data?.message || err.message;
+      set({ error: errorMessage, loading: false });
+      throw new Error(errorMessage);
     }
   },
 
-  // Function to delete a product
   deleteProduct: async (id: string) => {
     set({ loading: true, error: null });
-
     try {
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete product");
-      }
-
-      set((state) => ({
-        products: state.products.filter((product) => product.id !== id),
-        loading: false,
-      }));
-    } catch (error: any) {
-      set({ error: error.message, loading: false });
+      await axios.delete(`${BACKEND_URL}/api/products/${id}`);
+      set({ loading: false });
+      return `Product ${id} deleted successfully`;
+    } catch (error) {
+      const err = error as AxiosError<ApiError>;
+      const errorMessage = err.response?.data?.message || err.message;
+      set({ error: errorMessage, loading: false });
+      throw new Error(errorMessage);
     }
   },
 }));

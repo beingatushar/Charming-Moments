@@ -1,5 +1,5 @@
 // src/pages/HomePage.tsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
@@ -10,8 +10,22 @@ import useProductStore from "../store/productStore";
 import { Product } from "../types";
 
 const HomePage: React.FC = () => {
-  const { products: allProducts } = useProductStore();
+  const { fetchAllProducts } = useProductStore();
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
 
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const products = await fetchAllProducts();
+        setAllProducts(products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        // Optionally handle the error in your UI
+      }
+    };
+
+    loadProducts();
+  }, [fetchAllProducts]);
   // Dynamically generate categories and their products
   const categories = Array.from(
     new Set(allProducts.map((product) => product.category)),

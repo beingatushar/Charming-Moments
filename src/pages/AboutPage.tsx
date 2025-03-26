@@ -94,9 +94,11 @@ const AboutContent: React.FC = () => {
       </h2>
       <div className="mt-8 text-center text-gray-600 max-w-2xl mx-auto">
         <p>
-          At Charming Moments, we blend creativity with passion to bring you
-          unique resin crafts and delectable chocolates. Our mission is to
-          create moments of joy and elegance through our handcrafted products.
+          Charming moments by Pooja is founded by Pooja Arora. Charming moments
+          believe in recollecting, brightening and memorizing every moments. To
+          enlighten the moments, Charming moments deals in variety of handmade
+          products. It offers homemade chocolate, candles, resin product and
+          purse & wallets.
         </p>
         <p className="mt-4">
           Founded in 2023, we are a small team of artisans dedicated to
@@ -115,10 +117,7 @@ const AboutPage: React.FC = () => {
       <Header />
 
       {/* Hero Section */}
-      <HeroSection
-        title="About Us"
-        backgroundImage="https://via.placeholder.com/1200x400"
-      />
+      <HeroSection title="About Us" backgroundImage="" />
 
       {/* About Content */}
       <AboutContent />

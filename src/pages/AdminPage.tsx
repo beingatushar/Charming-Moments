@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
@@ -264,12 +264,17 @@ const ProductTable: React.FC<ProductTableProps> = ({
   );
 };
 
-// AdminPage Component
 const AdminPage: React.FC = () => {
-  const { products, createProduct, updateProduct, deleteProduct } =
-    useProductStore();
+  const {
+    fetchAllProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    loading: apiLoading,
+    error: apiError,
+  } = useProductStore();
 
-  // State for adding/editing a product
+  const [products, setProducts] = useState<Product[]>([]);
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
     category: "",
     name: "",
@@ -278,12 +283,29 @@ const AdminPage: React.FC = () => {
     stock: 0,
     image: "",
   });
-
-  // State to track if we're editing an existing product
   const [isEditing, setIsEditing] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [localLoading, setLocalLoading] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
-  // Function to handle input changes
+  // Fetch products on component mount
+  useEffect(() => {
+    const loadProducts = async () => {
+      setLocalLoading(true);
+      setLocalError(null);
+      try {
+        const fetchedProducts = await fetchAllProducts();
+        setProducts(fetchedProducts);
+      } catch (err) {
+        setLocalError("Failed to fetch products. Please try again later.");
+        console.error("Failed to fetch products:", err);
+      } finally {
+        setLocalLoading(false);
+      }
+    };
+    loadProducts();
+  }, [fetchAllProducts]);
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -291,7 +313,6 @@ const AdminPage: React.FC = () => {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
-  // Function to handle image file upload
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -303,59 +324,118 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  // Function to add or update a product
-  const handleAddOrUpdateProduct = () => {
-    if (
-      newProduct.name &&
-      newProduct.category &&
-      newProduct.price &&
-      newProduct.price > 0 &&
-      newProduct.stock !== undefined &&
-      newProduct.stock >= 0
-    ) {
+  const validateProduct = (): boolean => {
+    if (!newProduct.name?.trim()) {
+      setLocalError("Product name is required");
+      return false;
+    }
+    if (!newProduct.category?.trim()) {
+      setLocalError("Category is required");
+      return false;
+    }
+    if (!newProduct.price || newProduct.price <= 0) {
+      setLocalError("Price must be greater than 0");
+      return false;
+    }
+    if (newProduct.stock === undefined || newProduct.stock < 0) {
+      setLocalError("Stock must be 0 or greater");
+      return false;
+    }
+    return true;
+  };
+
+  const handleAddOrUpdateProduct = async () => {
+    if (!validateProduct()) return;
+
+    setLocalLoading(true);
+    setLocalError(null);
+
+    try {
       if (isEditing && editingProductId) {
-        // Update existing product
-        updateProduct(editingProductId, newProduct);
-        setIsEditing(false);
-        setEditingProductId(null);
+        const updatedProduct = await updateProduct(
+          editingProductId,
+          newProduct,
+        );
+        setProducts(
+          products.map((p) => (p.id === editingProductId ? updatedProduct : p)),
+        );
       } else {
-        // Add new product
-        createProduct(newProduct);
+        // Generate a temporary ID for new products
+        const productWithId = {
+          ...newProduct,
+          id: `temp-${Date.now()}`, // Temporary ID for frontend use
+        };
+        const createdProduct = await createProduct(productWithId);
+        setProducts([...products, createdProduct]);
       }
-      // Reset form
-      setNewProduct({
-        category: "",
-        name: "",
-        description: "",
-        price: 0,
-        stock: 0,
-        image: "",
-      });
+
+      resetForm();
+    } catch (err) {
+      setLocalError(
+        err instanceof Error
+          ? err.message
+          : "Failed to save product. Please try again.",
+      );
+      console.error("Error saving product:", err);
+    } finally {
+      setLocalLoading(false);
     }
   };
 
-  // Function to delete a product
-  const handleDeleteProduct = (id: string) => {
-    deleteProduct(id);
+  const handleDeleteProduct = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
+
+    setLocalLoading(true);
+    setLocalError(null);
+
+    try {
+      await deleteProduct(id);
+      setProducts(products.filter((p) => p.id !== id));
+    } catch (err) {
+      setLocalError("Failed to delete product. Please try again.");
+      console.error("Error deleting product:", err);
+    } finally {
+      setLocalLoading(false);
+    }
   };
 
-  // Function to populate form for editing
   const handleEditProduct = (product: Product) => {
     setNewProduct(product);
     setIsEditing(true);
     setEditingProductId(product.id);
   };
 
+  const resetForm = () => {
+    setNewProduct({
+      category: "",
+      name: "",
+      description: "",
+      price: 0,
+      stock: 0,
+      image: "",
+    });
+    setIsEditing(false);
+    setEditingProductId(null);
+  };
+
+  const isLoading = apiLoading || localLoading;
+  const error = apiError || localError;
+
   return (
     <>
       <Header />
-      <HeroSection title={"Admin Panel"} backgroundImage={""} />
+      <HeroSection title="Admin Panel" backgroundImage="" />
       <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
-        {/* Admin Panel Content */}
         <main className="container px-4 sm:px-6 lg:px-8 py-12 flex-1">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Admin Panel</h1>
 
-          {/* Add/Edit Product Form */}
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+
           <ProductForm
             newProduct={newProduct}
             isEditing={isEditing}
@@ -364,15 +444,16 @@ const AdminPage: React.FC = () => {
             onSubmit={handleAddOrUpdateProduct}
           />
 
-          {/* Product List */}
-          <ProductTable
-            products={products}
-            onEdit={handleEditProduct}
-            onDelete={handleDeleteProduct}
-          />
+          {isLoading ? (
+            <div className="text-center py-8">Loading...</div>
+          ) : (
+            <ProductTable
+              products={products}
+              onEdit={handleEditProduct}
+              onDelete={handleDeleteProduct}
+            />
+          )}
         </main>
-
-        {/* Footer */}
         <Footer />
       </div>
     </>
