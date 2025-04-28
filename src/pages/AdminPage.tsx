@@ -1,9 +1,12 @@
+// src/pages/AdminPage.tsx
+
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import { Product } from "../types";
 import useProductStore from "../store/productStore";
+import { toast } from "react-hot-toast";
 
 // ProductForm Component
 interface ProductFormProps {
@@ -15,6 +18,7 @@ interface ProductFormProps {
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
 }
+
 const ProductForm: React.FC<ProductFormProps> = ({
   newProduct,
   isEditing,
@@ -22,6 +26,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
   onImageUpload,
   onSubmit,
 }) => {
+  const { loading } = useProductStore();
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
       <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -34,121 +40,63 @@ const ProductForm: React.FC<ProductFormProps> = ({
         }}
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* Category Input */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="category"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Category
-            </label>
-            <input
-              type="text"
-              id="category"
-              placeholder="Category"
-              name="category"
-              value={newProduct.category}
-              onChange={onInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
+          {/* Category */}
+          <InputField
+            label="Category"
+            id="category"
+            name="category"
+            value={newProduct.category}
+            onChange={onInputChange}
+          />
 
-          {/* Product Name Input */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="name"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Product Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              placeholder="Product Name"
-              name="name"
-              value={newProduct.name}
-              onChange={onInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
+          {/* Name */}
+          <InputField
+            label="Product Name"
+            id="name"
+            name="name"
+            value={newProduct.name}
+            onChange={onInputChange}
+          />
 
-          {/* Price Input */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="price"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Price
-            </label>
-            <input
-              type="number"
-              id="price"
-              placeholder="Price"
-              name="price"
-              value={newProduct.price}
-              onChange={onInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
+          {/* Price */}
+          <InputField
+            label="Price"
+            id="price"
+            name="price"
+            type="number"
+            value={newProduct.price}
+            onChange={onInputChange}
+          />
 
-          {/* Stock Input */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="stock"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Stock
-            </label>
-            <input
-              type="number"
-              id="stock"
-              placeholder="Stock"
-              name="stock"
-              value={newProduct.stock}
-              onChange={onInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
+          {/* Stock */}
+          <InputField
+            label="Stock"
+            id="stock"
+            name="stock"
+            type="number"
+            value={newProduct.stock}
+            onChange={onInputChange}
+          />
 
-          {/* Description Input */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="description"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Description
-            </label>
-            <input
-              type="text"
-              id="description"
-              placeholder="Description"
-              name="description"
-              value={newProduct.description}
-              onChange={onInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
+          {/* Description */}
+          <InputField
+            label="Description"
+            id="description"
+            name="description"
+            value={newProduct.description}
+            onChange={onInputChange}
+          />
 
-          {/* Image URL Input */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="image"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Image URL
-            </label>
-            <input
-              type="text"
-              id="image"
-              placeholder="Image URL"
-              name="image"
-              value={newProduct.image}
-              onChange={onInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
+          {/* Image URL */}
+          <InputField
+            label="Image URL"
+            id="image"
+            name="image"
+            value={newProduct.image}
+            onChange={onInputChange}
+          />
 
-          {/* Image Upload Input */}
+          {/* Image Upload */}
           <div className="flex flex-col">
             <label
               htmlFor="image-upload"
@@ -183,9 +131,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
           <div className="col-span-full">
             <button
               type="submit"
-              className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+              disabled={loading}
+              className={`w-full ${loading ? "bg-pink-300" : "bg-pink-500"} text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300`}
             >
-              {isEditing ? "Update Product" : "Add Product"}
+              {loading
+                ? "Saving..."
+                : isEditing
+                  ? "Update Product"
+                  : "Add Product"}
             </button>
           </div>
         </div>
@@ -193,6 +146,42 @@ const ProductForm: React.FC<ProductFormProps> = ({
     </div>
   );
 };
+
+// Reusable Input Field
+interface InputFieldProps {
+  label: string;
+  id: string;
+  name: string;
+  type?: string;
+  value?: any;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+}
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  id,
+  name,
+  type = "text",
+  value,
+  onChange,
+}) => (
+  <div className="flex flex-col">
+    <label htmlFor={id} className="text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <input
+      type={type}
+      id={id}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={label}
+      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+    />
+  </div>
+);
+
 // ProductTable Component
 interface ProductTableProps {
   products: Product[];
@@ -270,13 +259,10 @@ const AdminPage: React.FC = () => {
     createProduct,
     updateProduct,
     deleteProduct,
-    uploadImage, // Add this
-    loading: apiLoading,
-    error: apiError,
+    uploadImage,
   } = useProductStore();
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [newProduct, setNewProduct] = useState<Partial<Product>>({
+  const initialProduct = () => ({
     category: "",
     name: "",
     description: "",
@@ -284,24 +270,25 @@ const AdminPage: React.FC = () => {
     stock: 0,
     image: "",
   });
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [newProduct, setNewProduct] =
+    useState<Partial<Product>>(initialProduct());
   const [isEditing, setIsEditing] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
-  const [localLoading, setLocalLoading] = useState(false);
-  const [localError, setLocalError] = useState<string | null>(null);
 
-  // Fetch products on component mount
   useEffect(() => {
     const loadProducts = async () => {
-      setLocalLoading(true);
-      setLocalError(null);
+      const loadingToast = toast.loading("Loading products...");
       try {
         const fetchedProducts = await fetchAllProducts();
         setProducts(fetchedProducts);
+        toast.success("Products loaded successfully!");
       } catch (err) {
-        setLocalError("Failed to fetch products. Please try again later.");
-        console.error("Failed to fetch products:", err);
+        console.error(err);
+        toast.error("Failed to fetch products.");
       } finally {
-        setLocalLoading(false);
+        toast.dismiss(loadingToast);
       }
     };
     loadProducts();
@@ -313,56 +300,43 @@ const AdminPage: React.FC = () => {
     const { name, value } = e.target;
     setNewProduct({ ...newProduct, [name]: value });
   };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setLocalLoading(true);
-    setLocalError(null);
+    const uploadingToast = toast.loading("Uploading image...");
 
     try {
-      // Upload the image to Cloudinary
       const imageUrl = await uploadImage(file);
-
-      // Update the product with the new image URL
       setNewProduct({ ...newProduct, image: imageUrl });
+      toast.success("Image uploaded successfully!");
     } catch (err) {
-      setLocalError(
-        err instanceof Error
-          ? err.message
-          : "Failed to upload image. Please try again.",
-      );
-      console.error("Error uploading image:", err);
+      console.error(err);
+      toast.error("Image upload failed.");
     } finally {
-      setLocalLoading(false);
+      toast.dismiss(uploadingToast);
     }
   };
 
   const validateProduct = (): boolean => {
-    if (!newProduct.name?.trim()) {
-      setLocalError("Product name is required");
-      return false;
-    }
-    if (!newProduct.category?.trim()) {
-      setLocalError("Category is required");
-      return false;
-    }
-    if (!newProduct.price || newProduct.price <= 0) {
-      setLocalError("Price must be greater than 0");
-      return false;
-    }
-    if (newProduct.stock === undefined || newProduct.stock < 0) {
-      setLocalError("Stock must be 0 or greater");
-      return false;
-    }
+    if (!newProduct.name?.trim())
+      return toast.error("Product name is required"), false;
+    if (!newProduct.category?.trim())
+      return toast.error("Category is required"), false;
+    if (!newProduct.price || newProduct.price <= 0)
+      return toast.error("Price must be greater than 0"), false;
+    if (newProduct.stock === undefined || newProduct.stock < 0)
+      return toast.error("Stock must be 0 or greater"), false;
     return true;
   };
 
   const handleAddOrUpdateProduct = async () => {
     if (!validateProduct()) return;
 
-    setLocalLoading(true);
-    setLocalError(null);
+    const savingToast = toast.loading(
+      isEditing ? "Updating product..." : "Adding product...",
+    );
 
     try {
       if (isEditing && editingProductId) {
@@ -373,26 +347,19 @@ const AdminPage: React.FC = () => {
         setProducts(
           products.map((p) => (p.id === editingProductId ? updatedProduct : p)),
         );
+        toast.success("Product updated successfully!");
       } else {
-        // Generate a temporary ID for new products
-        const productWithId = {
-          ...newProduct,
-          id: `temp-${Date.now()}`, // Temporary ID for frontend use
-        };
+        const productWithId = { ...newProduct, id: `temp-${Date.now()}` };
         const createdProduct = await createProduct(productWithId);
         setProducts([...products, createdProduct]);
+        toast.success("Product added successfully!");
       }
-
       resetForm();
     } catch (err) {
-      setLocalError(
-        err instanceof Error
-          ? err.message
-          : "Failed to save product. Please try again.",
-      );
-      console.error("Error saving product:", err);
+      console.error(err);
+      toast.error("Failed to save product.");
     } finally {
-      setLocalLoading(false);
+      toast.dismiss(savingToast);
     }
   };
 
@@ -400,17 +367,17 @@ const AdminPage: React.FC = () => {
     if (!window.confirm("Are you sure you want to delete this product?"))
       return;
 
-    setLocalLoading(true);
-    setLocalError(null);
+    const deletingToast = toast.loading("Deleting product...");
 
     try {
       await deleteProduct(id);
       setProducts(products.filter((p) => p.id !== id));
+      toast.success("Product deleted successfully!");
     } catch (err) {
-      setLocalError("Failed to delete product. Please try again.");
-      console.error("Error deleting product:", err);
+      console.error(err);
+      toast.error("Failed to delete product.");
     } finally {
-      setLocalLoading(false);
+      toast.dismiss(deletingToast);
     }
   };
 
@@ -421,34 +388,21 @@ const AdminPage: React.FC = () => {
   };
 
   const resetForm = () => {
-    setNewProduct({
-      category: "",
-      name: "",
-      description: "",
-      price: 0,
-      stock: 0,
-      image: "",
-    });
+    setNewProduct(initialProduct());
     setIsEditing(false);
     setEditingProductId(null);
   };
 
-  const isLoading = apiLoading || localLoading;
-  const error = apiError || localError;
-
   return (
     <>
       <Header />
-      <HeroSection title="Admin Panel" backgroundImage="" />
+      <HeroSection
+        title="Admin Panel"
+        backgroundImage="https://source.unsplash.com/featured/?technology"
+      />
       <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
-        <main className="container px-4 sm:px-6 lg:px-8 py-12 flex-1">
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Admin Panel</h1>
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
 
           <ProductForm
             newProduct={newProduct}
@@ -457,29 +411,14 @@ const AdminPage: React.FC = () => {
             onImageUpload={handleImageUpload}
             onSubmit={handleAddOrUpdateProduct}
           />
-          {isLoading ? (
-            <div className="flex items-center justify-center">
-              <span className="text-pink-500">Uploading image...</span>
-            </div>
-          ) : (
-            <div className="flex flex-col">
-              <label
-                htmlFor="image-upload"
-                className="text-sm font-medium text-gray-700 mb-1"
-              >
-                Upload Image
-              </label>
-              <input
-                type="file"
-                id="image-upload"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-                disabled={isLoading}
-              />
-            </div>
-          )}
+
+          <ProductTable
+            products={products}
+            onEdit={handleEditProduct}
+            onDelete={handleDeleteProduct}
+          />
         </main>
+
         <Footer />
       </div>
     </>

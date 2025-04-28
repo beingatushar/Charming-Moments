@@ -11,25 +11,20 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const { loading } = useProductStore();
-  const [searchParams, setSearchParams] = useSearchParams(); // Hook for query parameters
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const { addToCart } = useCartStore();
 
-  // Get the current sortBy and category values from query parameters
   const sortBy = searchParams.get("sortBy") || "default";
   const selectedCategory = searchParams.get("category") || null;
 
-  // Extract unique categories from the products array
   const categories = Array.from(
     new Set(products.map((product) => product.category)),
   );
 
-  // Filter products based on the selected category
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
     : products;
 
-  // Sort products based on the selected filter
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "price-low-to-high":
@@ -57,25 +52,24 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     }
   });
 
-  // Update query parameters when sortBy changes
   const handleSortChange = (value: string) => {
     if (value === "default") {
-      searchParams.delete("sortBy"); // Remove sortBy parameter for default
+      searchParams.delete("sortBy");
     } else {
-      searchParams.set("sortBy", value); // Set sortBy parameter
+      searchParams.set("sortBy", value);
     }
-    setSearchParams(searchParams); // Update the URL
+    setSearchParams(searchParams);
   };
 
-  // Update query parameters when category changes
   const handleCategoryChange = (category: string | null) => {
     if (category === null) {
-      searchParams.delete("category"); // Remove category parameter for "All"
+      searchParams.delete("category");
     } else {
-      searchParams.set("category", category); // Set category parameter
+      searchParams.set("category", category);
     }
-    setSearchParams(searchParams); // Update the URL
+    setSearchParams(searchParams);
   };
+
   const handleAddToCart = (product: Product) => {
     addToCart({
       id: product.id,
@@ -86,18 +80,19 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     });
     toast.success(`${product.name} added to cart!`);
   };
+
   if (loading) return <Spinner />;
 
   return (
-    <div className="font-sans">
+    <div className="font-sans px-4 py-8 max-w-7xl mx-auto ">
       {/* Category Filters */}
-      <div className="flex justify-center space-x-4 space-y-2 mb-8 flex-wrap">
+      <div className="flex flex-wrap justify-center gap-3 mb-10 ">
         <button
-          onClick={() => handleCategoryChange(null)} // Update category in query params
-          className={`px-6 py-2 rounded-full ${
+          onClick={() => handleCategoryChange(null)}
+          className={`px-5 py-2 text-sm font-medium rounded-full transition duration-300 ${
             !selectedCategory
-              ? "bg-pink-500 text-white"
-              : "bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300"
+              ? "bg-pink-600 text-white shadow-lg"
+              : "bg-gray-100 text-gray-700 hover:bg-pink-500 hover:text-white"
           }`}
         >
           All
@@ -105,11 +100,11 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         {categories.map((category) => (
           <button
             key={category}
-            onClick={() => handleCategoryChange(category)} // Update category in query params
-            className={`px-6 py-2 rounded-full ${
+            onClick={() => handleCategoryChange(category)}
+            className={`px-5 py-2 text-sm font-medium rounded-full transition duration-300 ${
               selectedCategory === category
-                ? "bg-pink-500 text-white"
-                : "bg-gray-200 text-gray-800 hover:bg-pink-500 hover:text-white transition duration-300"
+                ? "bg-pink-600 text-white shadow-lg"
+                : "bg-gray-100 text-gray-700 hover:bg-pink-500 hover:text-white"
             }`}
           >
             {category.replace(/-/g, " ")}
@@ -118,11 +113,11 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       </div>
 
       {/* Sorting Filters */}
-      <div className="flex justify-center space-x-4 mb-8 flex-wrap">
+      <div className="flex justify-center mb-10">
         <select
           value={sortBy}
-          onChange={(e) => handleSortChange(e.target.value)} // Update query parameters
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+          onChange={(e) => handleSortChange(e.target.value)}
+          className="px-4 py-2 w-60 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500 transition"
         >
           <option value="default">Sort By Default</option>
           <option value="price-low-to-high">Price: Low to High</option>
@@ -136,41 +131,45 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
         {sortedProducts.map((product) => (
           <div
             key={product.id}
-            className="bg-white shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-105"
+            className="group bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
           >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-bold text-gray-800">
-                {product.name}
-              </h3>
-              <p className="text-gray-600">Price: Rs {product.price}</p>
-              {product.features && (
-                <ul className="mt-2">
-                  {product.features.map((feature, index) => (
-                    <li key={index} className="text-gray-600">
-                      • {feature}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <div className="flex space-x-4">
+            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="object-cover w-full h-full group-hover:scale-110 transition duration-300"
+              />
+            </div>
+            <div className="p-5 flex flex-col justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-pink-600 transition">
+                  {product.name}
+                </h3>
+                <p className="mt-2 text-gray-600 font-medium">
+                  Rs {product.price}
+                </p>
+                {product.features && (
+                  <ul className="mt-3 space-y-1 text-gray-500 text-sm">
+                    {product.features.map((feature, index) => (
+                      <li key={index}>• {feature}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div className="flex flex-col gap-2 mt-5">
                 <Link
                   to={`/product/${product.id}`}
-                  className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg text-center hover:bg-pink-600 transition duration-300"
+                  className="text-center bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-md text-sm font-semibold transition"
                 >
-                  View
+                  View Details
                 </Link>
                 <button
                   onClick={() => handleAddToCart(product)}
-                  className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+                  className="text-center bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-md text-sm font-semibold transition"
                 >
                   Add to Cart
                 </button>
