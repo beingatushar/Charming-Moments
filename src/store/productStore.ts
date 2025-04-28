@@ -2,15 +2,13 @@ import { create } from "zustand";
 import { Product } from "../types";
 import { BACKEND_URL } from "../constants";
 import axios, { AxiosError } from "axios";
-import { Cloudinary } from "@cloudinary/url-gen";
-import { AdvancedImage, responsive, placeholder } from "@cloudinary/react";
 
 interface ProductStore {
   loading: boolean;
   error: string | null;
   fetchAllProducts: () => Promise<Product[]>;
   findById: (id: string) => Promise<Product>;
-  uploadImage: (imageFile: File) => Promise<string>; // New method
+  uploadImage: (imageFile: File) => Promise<string>;
   deleteProduct: (id: string) => Promise<string>;
   updateProduct: (
     id: string,
@@ -18,10 +16,20 @@ interface ProductStore {
   ) => Promise<Product>;
   createProduct: (newProduct: Partial<Product>) => Promise<Product>;
 }
-
 interface ApiError {
   message: string;
 }
+
+// Helper function for error handling
+const handleApiError = (error: unknown): string => {
+  // Check if the error is an instance of AxiosError
+  if (axios.isAxiosError(error)) {
+    const err = error as AxiosError<ApiError>;
+    return err.response?.data?.message || err.message;
+  }
+  // Fallback for non-Axios errors (in case an unexpected error is thrown)
+  return "An unknown error occurred";
+};
 
 const useProductStore = create<ProductStore>((set) => ({
   loading: false,
@@ -35,11 +43,9 @@ const useProductStore = create<ProductStore>((set) => ({
       );
       set({ loading: false });
       return response.data;
-    } catch (error) {
-      const err = error as AxiosError<ApiError>;
-      const errorMessage = err.response?.data?.message || err.message;
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+    } catch (error: unknown) {
+      set({ error: handleApiError(error), loading: false });
+      throw new Error(handleApiError(error));
     }
   },
 
@@ -51,33 +57,27 @@ const useProductStore = create<ProductStore>((set) => ({
       );
       set({ loading: false });
       return response.data;
-    } catch (error) {
-      const err = error as AxiosError<ApiError>;
-      const errorMessage = err.response?.data?.message || err.message;
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+    } catch (error: unknown) {
+      set({ error: handleApiError(error), loading: false });
+      throw new Error(handleApiError(error));
     }
   },
 
   createProduct: async (newProduct: Partial<Product>) => {
     set({ loading: true, error: null });
     try {
-      // If no ID provided, let the backend generate one
       const productToCreate = newProduct.id
         ? newProduct
         : { ...newProduct, id: "temp-here" };
-
       const response = await axios.post<Product>(
         `${BACKEND_URL}/api/products`,
         productToCreate,
       );
       set({ loading: false });
       return response.data;
-    } catch (error) {
-      const err = error as AxiosError<ApiError>;
-      const errorMessage = err.response?.data?.message || err.message;
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+    } catch (error: unknown) {
+      set({ error: handleApiError(error), loading: false });
+      throw new Error(handleApiError(error));
     }
   },
 
@@ -90,11 +90,9 @@ const useProductStore = create<ProductStore>((set) => ({
       );
       set({ loading: false });
       return response.data;
-    } catch (error) {
-      const err = error as AxiosError<ApiError>;
-      const errorMessage = err.response?.data?.message || err.message;
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+    } catch (error: unknown) {
+      set({ error: handleApiError(error), loading: false });
+      throw new Error(handleApiError(error));
     }
   },
 
@@ -104,75 +102,64 @@ const useProductStore = create<ProductStore>((set) => ({
       await axios.delete(`${BACKEND_URL}/api/products/${id}`);
       set({ loading: false });
       return `Product ${id} deleted successfully`;
-    } catch (error) {
-      const err = error as AxiosError<ApiError>;
-      const errorMessage = err.response?.data?.message || err.message;
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+    } catch (error: unknown) {
+      set({ error: handleApiError(error), loading: false });
+      throw new Error(handleApiError(error));
     }
   },
+
   uploadImage: async (imageFile: File) => {
     set({ loading: true, error: null });
 
-    // Configuration - move these to environment variables in production
-    const CLOUD_NAME = "dxa3titlk";
-    const UPLOAD_PRESET = "ffdwxgii";
+    const CLOUD_NAME = process.env.CLOUD_NAME || "dxa3titlk"; // Move to env variables
+    const UPLOAD_PRESET = process.env.UPLOAD_PRESET || "ffdwxgii"; // Move to env variables
     const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunk size
 
-    try {
-      const uniqueUploadId = `uqid-${Date.now()}`;
-      const totalChunks = Math.ceil(imageFile.size / CHUNK_SIZE);
-      let currentChunk = 0;
+    const uniqueUploadId = `uqid-${Date.now()}`;
+    const totalChunks = Math.ceil(imageFile.size / CHUNK_SIZE);
 
-      const uploadChunk = async (start: number, end: number): Promise<any> => {
-        const formData = new FormData();
-        formData.append("file", imageFile.slice(start, end));
-        formData.append("cloud_name", CLOUD_NAME);
-        formData.append("upload_preset", UPLOAD_PRESET);
-        const contentRange = `bytes ${start}-${end - 1}/${imageFile.size}`;
+    const uploadChunk = async (start: number, end: number): Promise<any> => {
+      const formData = new FormData();
+      formData.append("file", imageFile.slice(start, end));
+      formData.append("cloud_name", CLOUD_NAME);
+      formData.append("upload_preset", UPLOAD_PRESET);
+      const contentRange = `bytes ${start}-${end - 1}/${imageFile.size}`;
 
-        try {
-          const response = await axios.post(
-            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
-            formData,
-            {
-              headers: {
-                "X-Unique-Upload-Id": uniqueUploadId,
-                "Content-Range": contentRange,
-                "Content-Type": "multipart/form-data",
-              },
+      try {
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
+          formData,
+          {
+            headers: {
+              "X-Unique-Upload-Id": uniqueUploadId,
+              "Content-Range": contentRange,
+              "Content-Type": "multipart/form-data",
             },
-          );
+          },
+        );
+        return response.data;
+      } catch (error: unknown) {
+        throw new Error(handleApiError(error));
+      }
+    };
 
-          currentChunk++;
+    try {
+      // Use a for loop to handle chunk uploads sequentially
+      let currentChunk = 0;
+      let uploadResult: any;
 
-          if (currentChunk < totalChunks) {
-            const nextStart = currentChunk * CHUNK_SIZE;
-            const nextEnd = Math.min(nextStart + CHUNK_SIZE, imageFile.size);
-            return uploadChunk(nextStart, nextEnd);
-          } else {
-            // Final chunk uploaded, return the response
-            return response.data;
-          }
-        } catch (error) {
-          const err = error as AxiosError<ApiError>;
-          const errorMessage = err.response?.data?.message || err.message;
-          throw new Error(errorMessage);
-        }
-      };
-
-      // Start the chunked upload
-      const start = 0;
-      const end = Math.min(CHUNK_SIZE, imageFile.size);
-      const result = await uploadChunk(start, end);
+      for (let i = 0; i < totalChunks; i++) {
+        const start = currentChunk * CHUNK_SIZE;
+        const end = Math.min(start + CHUNK_SIZE, imageFile.size);
+        uploadResult = await uploadChunk(start, end);
+        currentChunk++;
+      }
 
       set({ loading: false });
-      return result.secure_url;
-    } catch (error) {
-      const err = error as AxiosError<ApiError>;
-      const errorMessage = err.response?.data?.message || err.message;
-      set({ error: errorMessage, loading: false });
-      throw new Error(errorMessage);
+      return uploadResult.secure_url;
+    } catch (error: unknown) {
+      set({ error: handleApiError(error), loading: false });
+      throw new Error(handleApiError(error));
     }
   },
 }));

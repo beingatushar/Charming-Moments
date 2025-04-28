@@ -13,6 +13,23 @@ const Header: React.FC = () => {
   // Helper function to check if a link is active
   const isActive = (path: string) => location.pathname === path;
 
+  // Reusable link styles
+  const linkStyles =
+    "text-gray-800 hover:text-pink-500 transition duration-300 text-center";
+  const activeLinkStyles = "text-pink-500 font-bold";
+
+  const navLinks = [
+    { to: "/", label: "Home" },
+    { to: "/shop", label: "Shop" },
+    { to: "/about", label: "About Us" },
+    { to: "/contact", label: "Contact" },
+  ];
+
+  const iconLinks = [
+    { to: "/cart", icon: <FaShoppingCart size={20} /> },
+    { to: "/admin", icon: <FaUser size={20} /> },
+  ];
+
   return (
     <header className="bg-white bg-opacity-90 backdrop-blur-md fixed w-full z-50 shadow-sm">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -26,58 +43,28 @@ const Header: React.FC = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6 items-center">
-          <Link
-            to="/"
-            className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive("/") ? "text-pink-500 font-bold" : ""
-            }`}
-          >
-            Home
-          </Link>
-          <Link
-            to="/shop"
-            className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive("/shop") ? "text-pink-500 font-bold" : ""
-            }`}
-          >
-            Shop
-          </Link>
-          <Link
-            to="/about"
-            className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive("/about") ? "text-pink-500 font-bold" : ""
-            }`}
-          >
-            About Us
-          </Link>
-          <Link
-            to="/contact"
-            className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive("/contact") ? "text-pink-500 font-bold" : ""
-            }`}
-          >
-            Contact
-          </Link>
+          {navLinks.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
+            >
+              {label}
+            </Link>
+          ))}
         </nav>
 
         {/* Icons for Cart and User */}
         <div className="hidden md:flex space-x-6 items-center">
-          <Link
-            to="/cart"
-            className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive("/cart") ? "text-pink-500 font-bold" : ""
-            }`}
-          >
-            <FaShoppingCart size={20} />
-          </Link>
-          <Link
-            to="/admin"
-            className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-              isActive("/admin") ? "text-pink-500 font-bold" : ""
-            }`}
-          >
-            <FaUser size={20} />
-          </Link>
+          {iconLinks.map(({ to, icon }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
+            >
+              {icon}
+            </Link>
+          ))}
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -93,61 +80,27 @@ const Header: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white bg-opacity-95 backdrop-blur-md">
           <nav className="flex flex-col space-y-4 p-6">
-            <Link
-              to="/"
-              className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive("/") ? "text-pink-500 font-bold" : ""
-              }`}
-              onClick={toggleMenu}
-            >
-              Home
-            </Link>
-            <Link
-              to="/shop"
-              className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive("/shop") ? "text-pink-500 font-bold" : ""
-              }`}
-              onClick={toggleMenu}
-            >
-              Shop
-            </Link>
-            <Link
-              to="/about"
-              className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive("/about") ? "text-pink-500 font-bold" : ""
-              }`}
-              onClick={toggleMenu}
-            >
-              About Us
-            </Link>
-            <Link
-              to="/contact"
-              className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                isActive("/contact") ? "text-pink-500 font-bold" : ""
-              }`}
-              onClick={toggleMenu}
-            >
-              Contact
-            </Link>
+            {navLinks.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
+                onClick={toggleMenu}
+              >
+                {label}
+              </Link>
+            ))}
             <div className="flex space-x-6">
-              <Link
-                to="/cart"
-                className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                  isActive("/cart") ? "text-pink-500 font-bold" : ""
-                }`}
-                onClick={toggleMenu}
-              >
-                <FaShoppingCart size={20} />
-              </Link>
-              <Link
-                to="/admin"
-                className={`text-gray-800 hover:text-pink-500 transition duration-300 text-center ${
-                  isActive("/admin") ? "text-pink-500 font-bold" : ""
-                }`}
-                onClick={toggleMenu}
-              >
-                <FaUser size={20} />
-              </Link>
+              {iconLinks.map(({ to, icon }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
+                  onClick={toggleMenu}
+                >
+                  {icon}
+                </Link>
+              ))}
             </div>
           </nav>
         </div>

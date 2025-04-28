@@ -1,27 +1,38 @@
-import React, { useEffect } from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import ShopPage from "./pages/ShopPage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
 import { Toaster } from "react-hot-toast";
-import CartPage from "./pages/CartPage";
-import AdminPage from "./pages/AdminPage";
-import ProductPage from "./pages/ProductPage";
+
+// Lazy loading pages
+const HomePage = React.lazy(() => import("./pages/HomePage"));
+const ShopPage = React.lazy(() => import("./pages/ShopPage"));
+const AboutPage = React.lazy(() => import("./pages/AboutPage"));
+const ContactPage = React.lazy(() => import("./pages/ContactPage"));
+const CartPage = React.lazy(() => import("./pages/CartPage"));
+const AdminPage = React.lazy(() => import("./pages/AdminPage"));
+const ProductPage = React.lazy(() => import("./pages/ProductPage"));
 
 const App: React.FC = () => {
+  // Define routes in an array to avoid redundancy
+  const routes = [
+    { path: "/", element: <HomePage /> },
+    { path: "/shop", element: <ShopPage /> },
+    { path: "/admin", element: <AdminPage /> },
+    { path: "/about", element: <AboutPage /> },
+    { path: "/contact", element: <ContactPage /> },
+    { path: "/cart", element: <CartPage /> },
+    { path: "/product/:productId", element: <ProductPage /> },
+  ];
+
   return (
     <Router>
       <Toaster />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/cart" element={<CartPage />} /> {/* Add CartPage route */}
-        <Route path="/product/:productId" element={<ProductPage />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          {routes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
+          ))}
+        </Routes>
+      </Suspense>
     </Router>
   );
 };

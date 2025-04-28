@@ -17,7 +17,7 @@ interface ProductFormProps {
   ) => void;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
-  onCancel: () => void; // 👈 add this
+  onCancel: () => void;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
@@ -42,7 +42,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
         }}
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* Category */}
           <InputField
             label="Category"
             id="category"
@@ -50,8 +49,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
             value={newProduct.category}
             onChange={onInputChange}
           />
-
-          {/* Name */}
           <InputField
             label="Product Name"
             id="name"
@@ -59,8 +56,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
             value={newProduct.name}
             onChange={onInputChange}
           />
-
-          {/* Price */}
           <InputField
             label="Price"
             id="price"
@@ -69,8 +64,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
             value={newProduct.price}
             onChange={onInputChange}
           />
-
-          {/* Stock */}
           <InputField
             label="Stock"
             id="stock"
@@ -79,8 +72,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
             value={newProduct.stock}
             onChange={onInputChange}
           />
-
-          {/* Description */}
           <InputField
             label="Description"
             id="description"
@@ -88,8 +79,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
             value={newProduct.description}
             onChange={onInputChange}
           />
-
-          {/* Image URL */}
           <InputField
             label="Image URL"
             id="image"
@@ -98,61 +87,15 @@ const ProductForm: React.FC<ProductFormProps> = ({
             onChange={onInputChange}
           />
 
-          {/* Image Upload */}
-          <div className="flex flex-col">
-            <label
-              htmlFor="image-upload"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Upload Image
-            </label>
-            <input
-              type="file"
-              id="image-upload"
-              accept="image/*"
-              onChange={onImageUpload}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-            />
-          </div>
+          {/* Image Upload and Preview */}
+          <ImageUploadField
+            onImageUpload={onImageUpload}
+            newProduct={newProduct}
+          />
 
-          {/* Image Preview */}
-          {newProduct.image && (
-            <div className="col-span-full">
-              <label className="text-sm font-medium text-gray-700 mb-1">
-                Image Preview
-              </label>
-              <img
-                src={newProduct.image}
-                alt="Product Preview"
-                className="w-32 h-32 object-cover rounded-lg"
-              />
-            </div>
-          )}
-
-          {/* Submit Button */}
-          {/* Submit Button */}
           <div className="col-span-full flex flex-col sm:flex-row gap-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full sm:w-auto ${loading ? "bg-pink-300" : "bg-pink-500"} text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300`}
-            >
-              {loading
-                ? "Saving..."
-                : isEditing
-                  ? "Update Product"
-                  : "Add Product"}
-            </button>
-
-            {isEditing && (
-              <button
-                type="button"
-                onClick={onCancel}
-                className="w-full sm:w-auto bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
-              >
-                Cancel
-              </button>
-            )}
+            <SubmitButton isEditing={isEditing} loading={loading} />
+            {isEditing && <CancelButton onCancel={onCancel} />}
           </div>
         </div>
       </form>
@@ -160,7 +103,88 @@ const ProductForm: React.FC<ProductFormProps> = ({
   );
 };
 
-// Reusable Input Field
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  id,
+  value,
+  onChange,
+  type = "text",
+}) => (
+  <div className="flex flex-col">
+    <label htmlFor={id} className="text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <input
+      type={type}
+      id={id}
+      name={id}
+      value={value}
+      onChange={onChange}
+      placeholder={label}
+      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+    />
+  </div>
+);
+
+const ImageUploadField: React.FC<{
+  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  newProduct: Partial<Product>;
+}> = ({ onImageUpload, newProduct }) => (
+  <>
+    <div className="flex flex-col">
+      <label
+        htmlFor="image-upload"
+        className="text-sm font-medium text-gray-700 mb-1"
+      >
+        Upload Image
+      </label>
+      <input
+        type="file"
+        id="image-upload"
+        accept="image/*"
+        onChange={onImageUpload}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+      />
+    </div>
+
+    {newProduct.image && (
+      <div className="col-span-full">
+        <label className="text-sm font-medium text-gray-700 mb-1">
+          Image Preview
+        </label>
+        <img
+          src={newProduct.image}
+          alt="Product Preview"
+          className="w-32 h-32 object-cover rounded-lg"
+        />
+      </div>
+    )}
+  </>
+);
+
+const SubmitButton: React.FC<{ isEditing: boolean; loading: boolean }> = ({
+  isEditing,
+  loading,
+}) => (
+  <button
+    type="submit"
+    disabled={loading}
+    className={`w-full sm:w-auto ${loading ? "bg-pink-300" : "bg-pink-500"} text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300`}
+  >
+    {loading ? "Saving..." : isEditing ? "Update Product" : "Add Product"}
+  </button>
+);
+
+const CancelButton: React.FC<{ onCancel: () => void }> = ({ onCancel }) => (
+  <button
+    type="button"
+    onClick={onCancel}
+    className="w-full sm:w-auto bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
+  >
+    Cancel
+  </button>
+);
+// Define InputFieldProps interface for the reusable input component
 interface InputFieldProps {
   label: string;
   id: string;
@@ -171,37 +195,13 @@ interface InputFieldProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
 }
-const InputField: React.FC<InputFieldProps> = ({
-  label,
-  id,
-  name,
-  type = "text",
-  value,
-  onChange,
-}) => (
-  <div className="flex flex-col">
-    <label htmlFor={id} className="text-sm font-medium text-gray-700 mb-1">
-      {label}
-    </label>
-    <input
-      type={type}
-      id={id}
-      name={name}
-      value={value}
-      onChange={onChange}
-      placeholder={label}
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
-    />
-  </div>
-);
 
-// ProductTable Component
+// Define ProductTableProps interface for the product table
 interface ProductTableProps {
   products: Product[];
   onEdit: (product: Product) => void;
   onDelete: (id: string) => void;
 }
-
 const ProductTable: React.FC<ProductTableProps> = ({
   products,
   onEdit,
@@ -266,6 +266,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
   );
 };
 
+// Admin Page Component
 const AdminPage: React.FC = () => {
   const {
     fetchAllProducts,
@@ -311,7 +312,7 @@ const AdminPage: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setNewProduct({ ...newProduct, [name]: value });
+    setNewProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -319,10 +320,9 @@ const AdminPage: React.FC = () => {
     if (!file) return;
 
     const uploadingToast = toast.loading("Uploading image...");
-
     try {
       const imageUrl = await uploadImage(file);
-      setNewProduct({ ...newProduct, image: imageUrl });
+      setNewProduct((prevProduct) => ({ ...prevProduct, image: imageUrl }));
       toast.success("Image uploaded successfully!");
     } catch (err) {
       console.error(err);
@@ -357,14 +357,16 @@ const AdminPage: React.FC = () => {
           editingProductId,
           newProduct,
         );
-        setProducts(
-          products.map((p) => (p.id === editingProductId ? updatedProduct : p)),
+        setProducts((prevProducts) =>
+          prevProducts.map((p) =>
+            p.id === editingProductId ? updatedProduct : p,
+          ),
         );
         toast.success("Product updated successfully!");
       } else {
         const productWithId = { ...newProduct, id: `temp-${Date.now()}` };
         const createdProduct = await createProduct(productWithId);
-        setProducts([...products, createdProduct]);
+        setProducts((prevProducts) => [...prevProducts, createdProduct]);
         toast.success("Product added successfully!");
       }
       resetForm();
@@ -384,7 +386,7 @@ const AdminPage: React.FC = () => {
 
     try {
       await deleteProduct(id);
-      setProducts(products.filter((p) => p.id !== id));
+      setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
       toast.success("Product deleted successfully!");
     } catch (err) {
       console.error(err);
@@ -416,23 +418,20 @@ const AdminPage: React.FC = () => {
       <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-1">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Admin Panel</h1>
-
           <ProductForm
             newProduct={newProduct}
             isEditing={isEditing}
             onInputChange={handleInputChange}
             onImageUpload={handleImageUpload}
             onSubmit={handleAddOrUpdateProduct}
-            onCancel={resetForm} // 👈 pass resetForm here
+            onCancel={resetForm}
           />
-
           <ProductTable
             products={products}
             onEdit={handleEditProduct}
             onDelete={handleDeleteProduct}
           />
         </main>
-
         <Footer />
       </div>
     </>

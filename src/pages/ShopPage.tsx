@@ -1,5 +1,4 @@
-// src/pages/ShopPage.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import Header from "../components/Header";
@@ -13,39 +12,36 @@ const ShopPage: React.FC = () => {
   const category = searchParams.get("category");
   const { fetchAllProducts } = useProductStore();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch and filter products
+  // Fetch all products and handle errors
   useEffect(() => {
     const loadProducts = async () => {
+      setLoading(true);
+      setError(null); // Reset error before fetching
       try {
         const products = await fetchAllProducts();
         setAllProducts(products);
-        // Apply filtering after fetching
-        setFilteredProducts(
-          category
-            ? products.filter((product) => product.category === category)
-            : products,
-        );
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        // Optionally handle the error in your UI
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("There was an issue fetching the products.");
+      } finally {
+        setLoading(false);
       }
     };
 
     loadProducts();
-  }, [fetchAllProducts, category]); // Add category to dependencies
+  }, [fetchAllProducts]);
 
-  // Additional effect to handle category changes without refetching
-  useEffect(() => {
-    if (allProducts.length > 0) {
-      setFilteredProducts(
-        category
-          ? allProducts.filter((product) => product.category === category)
-          : allProducts,
-      );
-    }
-  }, [category, allProducts]); // Only runs when category or allProducts changes
+  // Memoized filtered products based on category
+  const filteredProducts = useMemo(
+    () =>
+      category
+        ? allProducts.filter((product) => product.category === category)
+        : allProducts,
+    [category, allProducts],
+  );
 
   return (
     <div className="font-sans bg-gray-50 min-h-screen">
@@ -60,7 +56,13 @@ const ShopPage: React.FC = () => {
 
       {/* Product List */}
       <section className="container mx-auto px-6 py-8">
-        <ProductList products={filteredProducts} />
+        {loading ? (
+          <div className="text-center">Loading...</div>
+        ) : error ? (
+          <div className="text-center text-red-500">{error}</div>
+        ) : (
+          <ProductList products={filteredProducts} />
+        )}
       </section>
 
       {/* Footer */}

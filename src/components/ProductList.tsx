@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Product } from "../types";
 import useProductStore from "../store/productStore";
 import Spinner from "./Spinner";
+import { useCallback, useMemo } from "react";
 
 interface ProductListProps {
   products: Product[];
@@ -17,76 +18,93 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const sortBy = searchParams.get("sortBy") || "default";
   const selectedCategory = searchParams.get("category") || null;
 
-  const categories = Array.from(
-    new Set(products.map((product) => product.category)),
+  // Memoize categories and filtered products to avoid recomputing on each render
+  const categories = useMemo(
+    () => Array.from(new Set(products.map((product) => product.category))),
+    [products],
   );
 
-  const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category === selectedCategory)
-    : products;
+  const filteredProducts = useMemo(() => {
+    return selectedCategory
+      ? products.filter((product) => product.category === selectedCategory)
+      : products;
+  }, [products, selectedCategory]);
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case "price-low-to-high":
-        return a.price - b.price;
-      case "price-high-to-low":
-        return b.price - a.price;
-      case "date-added-newest":
-        return (
-          new Date(b.dateAdded || "").getTime() -
-          new Date(a.dateAdded || "").getTime()
-        );
-      case "date-added-oldest":
-        return (
-          new Date(a.dateAdded || "").getTime() -
-          new Date(b.dateAdded || "").getTime()
-        );
-      case "rating-high-to-low":
-        return (b.rating || 0) - (a.rating || 0);
-      case "name-a-z":
-        return a.name.localeCompare(b.name);
-      case "name-z-a":
-        return b.name.localeCompare(a.name);
-      default:
-        return 0;
-    }
-  });
-
-  const handleSortChange = (value: string) => {
-    if (value === "default") {
-      searchParams.delete("sortBy");
-    } else {
-      searchParams.set("sortBy", value);
-    }
-    setSearchParams(searchParams);
-  };
-
-  const handleCategoryChange = (category: string | null) => {
-    if (category === null) {
-      searchParams.delete("category");
-    } else {
-      searchParams.set("category", category);
-    }
-    setSearchParams(searchParams);
-  };
-
-  const handleAddToCart = (product: Product) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image || "https://via.placeholder.com/150",
-      quantity: 1,
+  const sortedProducts = useMemo(() => {
+    return [...filteredProducts].sort((a, b) => {
+      switch (sortBy) {
+        case "price-low-to-high":
+          return a.price - b.price;
+        case "price-high-to-low":
+          return b.price - a.price;
+        case "date-added-newest":
+          return (
+            new Date(b.dateAdded || "").getTime() -
+            new Date(a.dateAdded || "").getTime()
+          );
+        case "date-added-oldest":
+          return (
+            new Date(a.dateAdded || "").getTime() -
+            new Date(b.dateAdded || "").getTime()
+          );
+        case "rating-high-to-low":
+          return (b.rating || 0) - (a.rating || 0);
+        case "name-a-z":
+          return a.name.localeCompare(b.name);
+        case "name-z-a":
+          return b.name.localeCompare(a.name);
+        default:
+          return 0;
+      }
     });
-    toast.success(`${product.name} added to cart!`);
-  };
+  }, [filteredProducts, sortBy]);
+
+  const handleSortChange = useCallback(
+    (value: string) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      if (value === "default") {
+        newParams.delete("sortBy");
+      } else {
+        newParams.set("sortBy", value);
+      }
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const handleCategoryChange = useCallback(
+    (category: string | null) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      if (category === null) {
+        newParams.delete("category");
+      } else {
+        newParams.set("category", category);
+      }
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const handleAddToCart = useCallback(
+    (product: Product) => {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image || "https://via.placeholder.com/150",
+        quantity: 1,
+      });
+      toast.success(`${product.name} added to cart!`);
+    },
+    [addToCart],
+  );
 
   if (loading) return <Spinner />;
 
   return (
-    <div className="font-sans px-4 py-8 max-w-7xl mx-auto ">
+    <div className="font-sans px-4 py-8 max-w-7xl mx-auto">
       {/* Category Filters */}
-      <div className="flex flex-wrap justify-center gap-3 mb-10 ">
+      <div className="flex flex-wrap justify-center gap-3 mb-10">
         <button
           onClick={() => handleCategoryChange(null)}
           className={`px-5 py-2 text-sm font-medium rounded-full transition duration-300 ${

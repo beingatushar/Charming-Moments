@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
@@ -14,26 +14,27 @@ interface TeamMemberProps {
   };
 }
 
-const TeamMember: React.FC<TeamMemberProps> = ({ member }) => {
+const TeamMember: React.FC<TeamMemberProps> = memo(({ member }) => {
+  const { name, role, image, description } = member;
+
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden text-center">
       <img
-        src={member.image}
-        alt={member.name}
+        src={image}
+        alt={`Photo of ${name}`}
         className="w-full h-48 object-cover"
       />
       <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-800">{member.name}</h3>
-        <p className="text-gray-600 mt-2">{member.role}</p>
-        <p className="text-gray-600 mt-4">{member.description}</p>
+        <h3 className="text-xl font-bold text-gray-800">{name}</h3>
+        <p className="text-gray-600 mt-2">{role}</p>
+        <p className="text-gray-600 mt-4">{description}</p>
       </div>
     </div>
   );
-};
+});
 
 // TeamSection Component
-const TeamSection: React.FC = () => {
-  // Team members data
+const TeamSection: React.FC = memo(() => {
   const teamMembers = [
     {
       id: 1,
@@ -67,7 +68,7 @@ const TeamSection: React.FC = () => {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Meet Our Team
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {teamMembers.map((member) => (
             <TeamMember key={member.id} member={member} />
           ))}
@@ -75,52 +76,46 @@ const TeamSection: React.FC = () => {
       </div>
     </section>
   );
-};
+});
 
 // AboutContent Component
-const AboutContent: React.FC = () => {
-  return (
-    <section className="container mx-auto px-6 py-12">
-      <h2 className="text-3xl font-bold text-center text-gray-800">
-        Our Story
-      </h2>
-      <div className="mt-8 text-center text-gray-600 max-w-2xl mx-auto">
-        <p>
-          Charming moments by Pooja is founded by Pooja Arora. Charming moments
-          believe in recollecting, brightening and memorizing every moments. To
-          enlighten the moments, Charming moments deals in variety of handmade
-          products. It offers homemade chocolate, candles, resin product and
-          purse & wallets.
-        </p>
-        <p className="mt-4">
-          Founded in 2023, we are a small team of artisans dedicated to
-          delivering high-quality, handmade items that you'll love.
-        </p>
-      </div>
-    </section>
-  );
-};
+const AboutContent: React.FC = memo(() => (
+  <section className="container mx-auto px-6 py-12">
+    <h2 className="text-3xl font-bold text-center text-gray-800">Our Story</h2>
+    <div className="mt-8 text-center text-gray-600 max-w-2xl mx-auto">
+      <p>
+        Charming moments by Pooja is founded by Pooja Arora. Charming moments
+        believe in recollecting, brightening, and memorizing every moment. To
+        enlighten the moments, Charming Moments deals in a variety of handmade
+        products, including homemade chocolates, candles, resin products, and
+        purses & wallets.
+      </p>
+      <p className="mt-4">
+        Founded in 2023, we are a small team of artisans dedicated to delivering
+        high-quality, handmade items that you'll love.
+      </p>
+    </div>
+  </section>
+));
 
 // AboutPage Component
-const AboutPage: React.FC = () => {
-  return (
-    <div className="font-sans">
-      {/* Header */}
-      <Header />
+const AboutPage: React.FC = () => (
+  <div className="font-sans">
+    {/* Header */}
+    <Header />
 
-      {/* Hero Section */}
-      <HeroSection title="About Us" backgroundImage="" />
+    {/* Hero Section */}
+    <HeroSection title="About Us" backgroundImage="" />
 
-      {/* About Content */}
-      <AboutContent />
+    {/* About Content */}
+    <AboutContent />
 
-      {/* Team Section */}
-      <TeamSection />
+    {/* Team Section */}
+    <TeamSection />
 
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
-};
+    {/* Footer */}
+    <Footer />
+  </div>
+);
 
 export default AboutPage;

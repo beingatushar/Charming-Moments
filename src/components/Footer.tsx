@@ -1,4 +1,3 @@
-// src/components/Footer.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -8,8 +7,22 @@ import {
   FaEnvelope,
   FaPhone,
 } from "react-icons/fa"; // Import icons
+import clsx from "clsx"; // For cleaner class management
 
 const Footer: React.FC = () => {
+  const socialLinks = {
+    instagram: "https://instagram.com/charming_moments",
+    facebook: "https://facebook.com",
+    twitter: "https://twitter.com",
+  };
+
+  const linkStyles =
+    "text-gray-400 hover:text-pink-500 transition duration-300";
+  const iconStyles =
+    "text-gray-400 hover:text-pink-500 transition duration-300";
+  const buttonStyles =
+    "bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300";
+
   return (
     <footer className="bg-gray-900 text-white mt-16 py-12">
       <div className="container mx-auto px-6">
@@ -24,26 +37,26 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-4">
               <a
-                href="https://instagram.com/charmimg_moments"
+                href={socialLinks.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-pink-500 transition duration-300"
+                className={iconStyles}
               >
                 <FaInstagram size={24} />
               </a>
               <a
-                href="https://facebook.com"
+                href={socialLinks.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-pink-500 transition duration-300"
+                className={iconStyles}
               >
                 <FaFacebook size={24} />
               </a>
               <a
-                href="https://twitter.com"
+                href={socialLinks.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-pink-500 transition duration-300"
+                className={iconStyles}
               >
                 <FaTwitter size={24} />
               </a>
@@ -55,34 +68,22 @@ const Footer: React.FC = () => {
             <h3 className="text-xl font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link
-                  to="/"
-                  className="text-gray-400 hover:text-pink-500 transition duration-300"
-                >
+                <Link to="/" className={linkStyles}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/shop"
-                  className="text-gray-400 hover:text-pink-500 transition duration-300"
-                >
+                <Link to="/shop" className={linkStyles}>
                   Shop
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/about"
-                  className="text-gray-400 hover:text-pink-500 transition duration-300"
-                >
+                <Link to="/about" className={linkStyles}>
                   About Us
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/contact"
-                  className="text-gray-400 hover:text-pink-500 transition duration-300"
-                >
+                <Link to="/contact" className={linkStyles}>
                   Contact
                 </Link>
               </li>
@@ -103,26 +104,6 @@ const Footer: React.FC = () => {
               </li>
             </ul>
           </div>
-
-          {/* Newsletter Subscription */}
-          {/* <div>
-            <h3 className="text-xl font-bold mb-4">
-              Subscribe to Our Newsletter
-            </h3>
-            <form className="flex flex-col space-y-4">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
-              />
-              <button
-                type="submit"
-                className="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div> */}
         </div>
 
         {/* Copyright Section */}

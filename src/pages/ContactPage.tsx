@@ -7,11 +7,13 @@ import HeroSection from "../components/HeroSection";
 const ContactForm: React.FC = () => {
   return (
     <section className="container mx-auto px-6 py-8">
-      <h2 className="text-3xl font-bold text-center text-gray-800">
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
         Get in Touch With Us
       </h2>
+
       <div className="mt-8 max-w-2xl mx-auto">
         <form className="space-y-6">
+          {/* Name Input */}
           <div>
             <label
               htmlFor="name"
@@ -22,9 +24,13 @@ const ContactForm: React.FC = () => {
             <input
               type="text"
               id="name"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg"
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500"
+              placeholder="Enter your name"
             />
           </div>
+
+          {/* Email Input */}
           <div>
             <label
               htmlFor="email"
@@ -35,9 +41,13 @@ const ContactForm: React.FC = () => {
             <input
               type="email"
               id="email"
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg"
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500"
+              placeholder="Enter your email"
             />
           </div>
+
+          {/* Message Textarea */}
           <div>
             <label
               htmlFor="message"
@@ -47,14 +57,18 @@ const ContactForm: React.FC = () => {
             </label>
             <textarea
               id="message"
+              required
               rows={4}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500"
+              placeholder="Write your message"
             ></textarea>
           </div>
+
+          {/* Submit Button */}
           <div>
             <button
               type="submit"
-              className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg"
+              className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
             >
               Send Message
             </button>
@@ -68,7 +82,7 @@ const ContactForm: React.FC = () => {
 // ContactPage Component
 const ContactPage: React.FC = () => {
   return (
-    <div className="font-sans">
+    <div className="font-sans bg-gray-50">
       {/* Header */}
       <Header />
 

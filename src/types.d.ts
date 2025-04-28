@@ -12,4 +12,5 @@ export interface Product {
   rating?: number;
   tags?: string[];
   material?: string;
+  isDeleted: boolean;
 }
