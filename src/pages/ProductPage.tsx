@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import useProductStore from "../store/productStore"; // Import the product store
@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Product } from "../types"; // Import the Product type
+import Spinner from "../components/Spinner";
+import { FaCross, FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 
 // ProductNotFound Component
 const ProductNotFound: React.FC = () => {
@@ -46,14 +48,165 @@ const ProductImage: React.FC<{ image: string; name: string }> = ({
   image,
   name,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scale, setScale] = useState(1); // Zoom scale
+  const [position, setPosition] = useState({ x: 0, y: 0 }); // Image position
+  const [dragging, setDragging] = useState(false);
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setDragging(true);
+    setStartPos({ x: e.clientX - position.x, y: e.clientY - position.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (dragging) {
+      setPosition({
+        x: e.clientX - startPos.x,
+        y: e.clientY - startPos.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setDragging(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      setDragging(true);
+      setStartPos({
+        x: e.touches[0].clientX - position.x,
+        y: e.touches[0].clientY - position.y,
+      });
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (dragging && e.touches.length === 1) {
+      setPosition({
+        x: e.touches[0].clientX - startPos.x,
+        y: e.touches[0].clientY - startPos.y,
+      });
+    } else if (e.touches.length === 2) {
+      // Pinch zoom
+      const distance = getDistance(e.touches[0], e.touches[1]);
+      if (containerRef.current) {
+        const scaleFactor = distance / 200; // Adjust sensitivity
+        setScale(Math.min(Math.max(scaleFactor, 1), 5)); // Limit zoom between 1 and 5
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setDragging(false);
+  };
+
+  const getDistance = (touch1: React.Touch, touch2: React.Touch) => {
+    const dx = touch2.clientX - touch1.clientX;
+    const dy = touch2.clientY - touch1.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  const zoomIn = () => {
+    setScale((prev) => Math.min(prev + 0.2, 5)); // Max zoom 5x
+  };
+
+  const zoomOut = () => {
+    setScale((prev) => Math.max(prev - 0.2, 1)); // Min zoom 1x
+    if (scale <= 1.2) setPosition({ x: 0, y: 0 }); // Reset position if zoomed out fully
+  };
+
   return (
-    <div className="flex justify-center items-center">
-      <img
-        src={image}
-        alt={name}
-        className="w-full h-96 object-cover rounded-lg"
-      />
-    </div>
+    <>
+      {/* Product Image */}
+      <div className="relative flex justify-center items-center">
+        <img
+          src={image}
+          alt={name}
+          className="w-full h-96 object-cover rounded-lg"
+        />
+
+        {/* Maximize Button */}
+        <button
+          onClick={() => setIsOpen(true)}
+          className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-pink-500 hover:text-white transition"
+        >
+          <FaSearchPlus />
+        </button>
+      </div>
+
+      {/* Popup Modal */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex justify-center items-center bg-[rgba(0,0,0,0.5)]"
+          onClick={() => setIsOpen(false)}
+        >
+          <div
+            className="relative bg-white rounded-lg overflow-hidden"
+            style={{ width: "80vw", height: "80vh" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              ref={containerRef}
+              className="w-full h-full overflow-hidden touch-none relative"
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              <img
+                src={image}
+                alt={name}
+                style={{
+                  transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+                  transformOrigin: "center center",
+                  transition: dragging ? "none" : "transform 0.3s ease",
+                }}
+                className="w-full h-full object-contain select-none cursor-grab"
+                draggable={false}
+              />
+            </div>
+
+            {/* Zoom Buttons */}
+            <div className="absolute bottom-4 left-4 flex gap-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  zoomIn();
+                }}
+                className="bg-pink-500 text-white p-2 rounded-full shadow-md hover:bg-pink-600 transition"
+              >
+                <FaSearchPlus />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  zoomOut();
+                }}
+                className="bg-pink-500 text-white p-2 rounded-full shadow-md hover:bg-pink-600 transition"
+              >
+                <FaSearchMinus />
+              </button>
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-4 right-4 bg-white p-2 rounded-full shadow-md hover:bg-pink-500 hover:text-white transition"
+            >
+              <FaSearchMinus />
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -155,31 +308,30 @@ const ProductPage: React.FC = () => {
       toast.success(`${product.name} added to cart!`);
     }
   };
-
-  // If the product is not found, display a message
-  if (!product) {
-    return <ProductNotFound />;
-  }
-
   return (
     <div className="font-sans">
       {/* Header */}
       <Header />
 
-      {/* Main Content */}
-      <main className="flex-1 pt-20">
-        {" "}
-        {/* Add padding-top to account for the header height */}
-        <div className="container mx-auto px-6">
-          {/* Breadcrumb Navigation */}
-          <Breadcrumb productName={product.name} />
-
-          {/* Product Details */}
-          <ProductDetails product={product} onAddToCart={handleAddToCart} />
+      {loading ? (
+        <div className="h-screen">
+          <Spinner />
         </div>
-      </main>
+      ) : !product ? (
+        <ProductNotFound />
+      ) : (
+        <main className="flex-1 pt-20">
+          {/* Add padding-top to account for the header height */}
+          <div className="container mx-auto px-6">
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb productName={product.name} />
 
-      {/* Footer */}
+            {/* Product Details */}
+            <ProductDetails product={product} onAddToCart={handleAddToCart} />
+          </div>
+        </main>
+      )}
+
       <Footer />
     </div>
   );

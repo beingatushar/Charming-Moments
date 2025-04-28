@@ -37,35 +37,27 @@ const TeamSection: React.FC = () => {
   const teamMembers = [
     {
       id: 1,
-      name: "John Doe",
+      name: "Pooja Arora",
       role: "Founder & CEO",
-      image: "https://via.placeholder.com/150",
+      image: "https://picsum.photos/1520",
       description:
-        "John is passionate about creating unique resin crafts and has over 10 years of experience in the industry.",
+        "Pooja is the visionary founder and leader of Charming Moments, with over 10 years of experience in creating unique resin crafts and building the brand.",
     },
     {
       id: 2,
-      name: "Jane Smith",
-      role: "Lead Artisan",
-      image: "https://via.placeholder.com/150",
+      name: "Vanshita Arora",
+      role: "Operations Lead",
+      image: "https://picsum.photos/1530",
       description:
-        "Jane specializes in handcrafted chocolates and has a keen eye for detail.",
+        "Vanshita manages daily operations, ensuring smooth production and delivery of all products while maintaining quality standards.",
     },
     {
       id: 3,
-      name: "Emily Brown",
-      role: "Marketing Manager",
-      image: "https://via.placeholder.com/150",
+      name: "Tushar Aggarwal",
+      role: "Web Designer & Developer",
+      image: "https://picsum.photos/1502",
       description:
-        "Emily is responsible for spreading the word about our products and connecting with our customers.",
-    },
-    {
-      id: 4,
-      name: "Michael Johnson",
-      role: "Product Designer",
-      image: "https://via.placeholder.com/150",
-      description:
-        "Michael designs our resin products and ensures they are both beautiful and functional.",
+        "Tushar designs and develops the digital presence of Charming Moments, creating seamless online experiences for customers.",
     },
   ];
 

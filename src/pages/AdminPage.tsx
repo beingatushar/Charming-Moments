@@ -270,6 +270,7 @@ const AdminPage: React.FC = () => {
     createProduct,
     updateProduct,
     deleteProduct,
+    uploadImage, // Add this
     loading: apiLoading,
     error: apiError,
   } = useProductStore();
@@ -312,15 +313,28 @@ const AdminPage: React.FC = () => {
     const { name, value } = e.target;
     setNewProduct({ ...newProduct, [name]: value });
   };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewProduct({ ...newProduct, image: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    setLocalLoading(true);
+    setLocalError(null);
+
+    try {
+      // Upload the image to Cloudinary
+      const imageUrl = await uploadImage(file);
+
+      // Update the product with the new image URL
+      setNewProduct({ ...newProduct, image: imageUrl });
+    } catch (err) {
+      setLocalError(
+        err instanceof Error
+          ? err.message
+          : "Failed to upload image. Please try again.",
+      );
+      console.error("Error uploading image:", err);
+    } finally {
+      setLocalLoading(false);
     }
   };
 
@@ -443,15 +457,27 @@ const AdminPage: React.FC = () => {
             onImageUpload={handleImageUpload}
             onSubmit={handleAddOrUpdateProduct}
           />
-
           {isLoading ? (
-            <div className="text-center py-8">Loading...</div>
+            <div className="flex items-center justify-center">
+              <span className="text-pink-500">Uploading image...</span>
+            </div>
           ) : (
-            <ProductTable
-              products={products}
-              onEdit={handleEditProduct}
-              onDelete={handleDeleteProduct}
-            />
+            <div className="flex flex-col">
+              <label
+                htmlFor="image-upload"
+                className="text-sm font-medium text-gray-700 mb-1"
+              >
+                Upload Image
+              </label>
+              <input
+                type="file"
+                id="image-upload"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                disabled={isLoading}
+              />
+            </div>
           )}
         </main>
         <Footer />

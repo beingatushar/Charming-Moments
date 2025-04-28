@@ -12,6 +12,8 @@
     "git": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\" \n git add . \n git commit -m\"init\" \n git push origin"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.14.1",
+    "@cloudinary/url-gen": "^1.21.0",
     "@tailwindcss/vite": "^4.0.15",
     "@types/axios": "^0.14.4",
     "axios": "^1.8.4",

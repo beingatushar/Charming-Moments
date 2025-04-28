@@ -2,12 +2,15 @@ import { Link, useSearchParams } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import toast from "react-hot-toast";
 import { Product } from "../types";
+import useProductStore from "../store/productStore";
+import Spinner from "./Spinner";
 
 interface ProductListProps {
   products: Product[];
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
+  const { loading } = useProductStore();
   const [searchParams, setSearchParams] = useSearchParams(); // Hook for query parameters
 
   const { addToCart } = useCartStore();
@@ -83,6 +86,8 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     });
     toast.success(`${product.name} added to cart!`);
   };
+  if (loading) return <Spinner />;
+
   return (
     <div className="font-sans">
       {/* Category Filters */}
