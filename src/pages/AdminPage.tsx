@@ -17,6 +17,7 @@ interface ProductFormProps {
   ) => void;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
+  onCancel: () => void; // 👈 add this
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
@@ -25,6 +26,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   onInputChange,
   onImageUpload,
   onSubmit,
+  onCancel,
 }) => {
   const { loading } = useProductStore();
 
@@ -128,11 +130,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
           )}
 
           {/* Submit Button */}
-          <div className="col-span-full">
+          {/* Submit Button */}
+          <div className="col-span-full flex flex-col sm:flex-row gap-4">
             <button
               type="submit"
               disabled={loading}
-              className={`w-full ${loading ? "bg-pink-300" : "bg-pink-500"} text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300`}
+              className={`w-full sm:w-auto ${loading ? "bg-pink-300" : "bg-pink-500"} text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300`}
             >
               {loading
                 ? "Saving..."
@@ -140,6 +143,16 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   ? "Update Product"
                   : "Add Product"}
             </button>
+
+            {isEditing && (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="w-full sm:w-auto bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </div>
       </form>
@@ -233,13 +246,13 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 <td className="px-4 py-2 space-x-2">
                   <button
                     onClick={() => onEdit(product)}
-                    className="text-blue-500 hover:text-blue-700 transition duration-300"
+                    className="text-blue-500 hover:transition duration-300 hover:bg-blue-500 hover:text-white hover:rounded p-1"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => onDelete(product.id)}
-                    className="text-red-500 hover:text-red-700 transition duration-300"
+                    className="text-red-500 transition duration-300 hover:bg-red-500 hover:text-white hover:rounded py-1 px-2"
                   >
                     Delete
                   </button>
@@ -410,6 +423,7 @@ const AdminPage: React.FC = () => {
             onInputChange={handleInputChange}
             onImageUpload={handleImageUpload}
             onSubmit={handleAddOrUpdateProduct}
+            onCancel={resetForm} // 👈 pass resetForm here
           />
 
           <ProductTable
