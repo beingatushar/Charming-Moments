@@ -1,3 +1,4 @@
+// components/ProductList.tsx
 import { Link, useSearchParams } from "react-router-dom";
 import useCartStore from "../store/cartStore";
 import toast from "react-hot-toast";
@@ -5,6 +6,7 @@ import { Product } from "../types";
 import useProductStore from "../store/productStore";
 import Spinner from "./Spinner";
 import { useCallback, useMemo } from "react";
+import { ProductCard } from "./ProductCard";
 
 interface ProductListProps {
   products: Product[];
@@ -18,7 +20,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const sortBy = searchParams.get("sortBy") || "default";
   const selectedCategory = searchParams.get("category") || null;
 
-  // Memoize categories and filtered products to avoid recomputing on each render
   const categories = useMemo(
     () => Array.from(new Set(products.map((product) => product.category))),
     [products],
@@ -151,49 +152,11 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         {sortedProducts.map((product) => (
-          <div
+          <ProductCard
             key={product.id}
-            className="group bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
-          >
-            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover group-hover:scale-110 transition duration-300"
-              />
-            </div>
-            <div className="p-5 flex flex-col justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 group-hover:text-pink-600 transition">
-                  {product.name}
-                </h3>
-                <p className="mt-2 text-gray-600 font-medium">
-                  Rs {product.price}
-                </p>
-                {product.features && (
-                  <ul className="mt-3 space-y-1 text-gray-500 text-sm">
-                    {product.features.map((feature, index) => (
-                      <li key={index}>• {feature}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <div className="flex flex-col gap-2 mt-5">
-                <Link
-                  to={`/product/${product.id}`}
-                  className="text-center bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-md text-sm font-semibold transition"
-                >
-                  View Details
-                </Link>
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className="text-center bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-md text-sm font-semibold transition"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
+            product={product}
+            onAddToCart={handleAddToCart}
+          />
         ))}
       </div>
     </div>

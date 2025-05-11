@@ -75,7 +75,7 @@ const HomePage: React.FC = () => {
             <CategorySlider
               key={category.name}
               category={category}
-              handleAddToCart={handleAddToCart} // Pass down the add to cart handler
+              onAddToCart={handleAddToCart} // Pass down the add to cart handler
             />
           ))
         )}
