@@ -56,7 +56,7 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="font-sans">
+    <div className="font-sans bg-gray-50 min-h-screen">
       <Header />
 
       {/* Hero Section */}

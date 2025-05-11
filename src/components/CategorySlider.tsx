@@ -24,7 +24,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
     "absolute top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition duration-300";
 
   return (
-    <div className="mb-12">
+    <div className="font-sans px-4 py-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl font-bold text-gray-800">
           {category.name.replace(/-/g, " ")}
