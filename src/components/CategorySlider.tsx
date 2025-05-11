@@ -28,7 +28,7 @@ const ProductCard: React.FC<{
       <div className="p-4">
         <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
         <p className="text-gray-600">Price: Rs {product.price}</p>
-        <div className="flex space-x-4">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0">
           <Link
             to={`/product/${product.id}`}
             className="mt-4 w-full bg-pink-500 text-white px-4 py-2 rounded-lg text-center hover:bg-pink-600 transition duration-300"
