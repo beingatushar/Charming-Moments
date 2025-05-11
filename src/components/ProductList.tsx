@@ -149,7 +149,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         {sortedProducts.map((product) => (
           <div
             key={product.id}
@@ -159,7 +159,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               <img
                 src={product.image}
                 alt={product.name}
-                className="object-cover w-full h-full group-hover:scale-110 transition duration-300"
+                className="w-full h-48 object-cover group-hover:scale-110 transition duration-300"
               />
             </div>
             <div className="p-5 flex flex-col justify-between">

@@ -19,7 +19,7 @@ const ProductCard: React.FC<{
   handleAddToCart: (product: Product) => void;
 }> = ({ product, handleAddToCart }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden gap-4">
       <img
         src={product.image}
         alt={product.name}
