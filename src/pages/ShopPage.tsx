@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import useProductStore from "../store/productStore";
 import { Product } from "../types";
+import Spinner from "../components/Spinner";
 
 const ShopPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -57,7 +58,7 @@ const ShopPage: React.FC = () => {
       {/* Product List */}
       <section className="container mx-auto px-6 py-8">
         {loading ? (
-          <div className="text-center">Loading...</div>
+          <Spinner/>
         ) : error ? (
           <div className="text-center text-red-500">{error}</div>
         ) : (

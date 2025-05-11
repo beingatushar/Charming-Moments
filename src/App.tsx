@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import Spinner from "./components/Spinner";
 
 // Lazy loading pages
 const HomePage = React.lazy(() => import("./pages/HomePage"));
@@ -26,7 +27,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <Toaster />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Spinner />}>
         <Routes>
           {routes.map((route, index) => (
             <Route key={index} path={route.path} element={route.element} />
