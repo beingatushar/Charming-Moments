@@ -28,23 +28,20 @@ const ProductCard: React.FC<{
       <div className="p-4">
         <h3 className="text-lg font-bold text-gray-800">{product.name}</h3>
         <p className="text-gray-600">Price: Rs {product.price}</p>
-        <div className="flex flex-col space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0">
-          <Link
-            to={`/product/${product.id}`}
-            className=" w-full bg-pink-500 text-white px-4 py-2 rounded-lg text-center hover:bg-pink-600 transition duration-300"
-          >
-            View
-          </Link>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleAddToCart(product);
-            }}
-            className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-          >
-            Add to Cart
-          </button>
-        </div>
+        <div className="flex flex-col gap-2 mt-5">
+                <Link
+                  to={`/product/${product.id}`}
+                  className="text-center bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-md text-sm font-semibold transition"
+                >
+                  View Details
+                </Link>
+                <button
+                  onClick={() => handleAddToCart(product)}
+                  className="text-center bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-md text-sm font-semibold transition"
+                >
+                  Add to Cart
+                </button>
+              </div>
       </div>
     </div>
   );
