@@ -27,7 +27,7 @@ const Header: React.FC = () => {
 
   const iconLinks = [
     { to: "/cart", icon: <FaShoppingCart size={20} /> },
-    { to: "/admin", icon: <FaUser size={20} /> },
+    // { to: "/admin", icon: <FaUser size={20} /> },
   ];
 
   return (

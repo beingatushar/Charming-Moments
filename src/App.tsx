@@ -16,7 +16,7 @@ const App: React.FC = () => {
   const routes = [
     { path: "/", element: <HomePage /> },
     { path: "/shop", element: <ShopPage /> },
-    { path: "/admin", element: <AdminPage /> },
+    // { path: "/admin", element: <AdminPage /> },
     { path: "/about", element: <AboutPage /> },
     { path: "/contact", element: <ContactPage /> },
     { path: "/cart", element: <CartPage /> },
