@@ -7,6 +7,7 @@ import HeroSection from "../components/HeroSection";
 import { Product } from "../types";
 import useProductStore from "../store/productStore";
 import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 // ProductForm Component
 interface ProductFormProps {
@@ -64,14 +65,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
             value={newProduct.price}
             onChange={onInputChange}
           />
-          <InputField
+          {/* <InputField
             label="Stock"
             id="stock"
             name="stock"
             type="number"
             value={newProduct.stock}
             onChange={onInputChange}
-          />
+          /> */}
           <InputField
             label="Description"
             id="description"
@@ -214,12 +215,12 @@ const ProductTable: React.FC<ProductTableProps> = ({
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left">ID</th>
+              {/* <th className="px-4 py-2 text-left">ID</th> */}
+              <th className="px-4 py-2 text-left">Image</th>
               <th className="px-4 py-2 text-left">Name</th>
               <th className="px-4 py-2 text-left">Category</th>
               <th className="px-4 py-2 text-left">Price</th>
-              <th className="px-4 py-2 text-left">Stock</th>
-              <th className="px-4 py-2 text-left">Image</th>
+              {/* <th className="px-4 py-2 text-left">Stock</th> */}
               <th className="px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
@@ -229,12 +230,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 key={product.id}
                 className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
               >
-                <td className="px-4 py-2">{product.id}</td>
-                <td className="px-4 py-2">{product.name}</td>
-                <td className="px-4 py-2">{product.category}</td>
-                <td className="px-4 py-2">Rs {product.price}</td>
-                <td className="px-4 py-2">{product.stock}</td>
-                <td className="px-4 py-2">
+                                <td className="px-4 py-2">
                   {product.image && (
                     <img
                       src={product.image}
@@ -243,7 +239,18 @@ const ProductTable: React.FC<ProductTableProps> = ({
                     />
                   )}
                 </td>
+                {/* <td className="px-4 py-2">{product.id}</td> */}
+                <td className="px-4 py-2">{product.name}</td>
+                <td className="px-4 py-2">{product.category}</td>
+                <td className="px-4 py-2">Rs {product.price}</td>
+                {/* <td className="px-4 py-2">{product.stock}</td> */}
+
                 <td className="px-4 py-2 space-x-2">
+                <Link
+                    onClick={() => onEdit(product)}
+                    className="text-purple-500 hover:transition duration-300 hover:bg-purple-500 hover:text-white hover:rounded p-1" to={`/product/${product.id}`}                  >
+                    View
+                  </Link>
                   <button
                     onClick={() => onEdit(product)}
                     className="text-blue-500 hover:transition duration-300 hover:bg-blue-500 hover:text-white hover:rounded p-1"
@@ -281,7 +288,7 @@ const AdminPage: React.FC = () => {
     name: "",
     description: "",
     price: 0,
-    stock: 0,
+    // stock: 0,
     image: "",
   });
 
@@ -339,8 +346,8 @@ const AdminPage: React.FC = () => {
       return toast.error("Category is required"), false;
     if (!newProduct.price || newProduct.price <= 0)
       return toast.error("Price must be greater than 0"), false;
-    if (newProduct.stock === undefined || newProduct.stock < 0)
-      return toast.error("Stock must be 0 or greater"), false;
+    // if (newProduct.stock === undefined || newProduct.stock < 0)
+    //   return toast.error("Stock must be 0 or greater"), false;
     return true;
   };
 
