@@ -1,5 +1,5 @@
 // components/AddressForm.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 interface AddressFormProps {
   name: string;
@@ -37,42 +37,42 @@ const AddressForm: React.FC<AddressFormProps> = ({
   errors,
 }) => {
   const [isFetching, setIsFetching] = useState(false);
-  const [pincodeError, setPincodeError] = useState("");
+  const [pincodeError, setPincodeError] = useState('');
 
   useEffect(() => {
     const fetchPincodeDetails = async () => {
       if (pincode.length === 6) {
         setIsFetching(true);
-        setPincodeError("");
+        setPincodeError('');
 
         try {
           const response = await fetch(
-            `${import.meta.env.VITE_PINCODE_API_URL}/${pincode}`,
+            `${import.meta.env.VITE_PINCODE_API_URL}/${pincode}`
           );
           const data = await response.json();
 
-          if (data[0].Status === "Success" && data[0].PostOffice) {
+          if (data[0].Status === 'Success' && data[0].PostOffice) {
             const firstPostOffice = data[0].PostOffice[0];
             setCity(firstPostOffice.Block || firstPostOffice.District);
             setState(firstPostOffice.State);
           } else {
-            setPincodeError("Invalid pincode or no data found");
-            setCity("");
-            setState("");
+            setPincodeError('Invalid pincode or no data found');
+            setCity('');
+            setState('');
           }
         } catch (error) {
-          console.error("Error fetching pincode details:", error);
-          setPincodeError("Failed to fetch pincode details");
-          setCity("");
-          setState("");
+          console.error('Error fetching pincode details:', error);
+          setPincodeError('Failed to fetch pincode details');
+          setCity('');
+          setState('');
         } finally {
           setIsFetching(false);
         }
       } else {
         // Clear city and state if pincode is not 6 digits
         if (city || state) {
-          setCity("");
-          setState("");
+          setCity('');
+          setState('');
         }
       }
     };
@@ -148,7 +148,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
             placeholder="Pincode"
             value={pincode}
             onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, ""); // Allow only numbers
+              const value = e.target.value.replace(/\D/g, ''); // Allow only numbers
               setPincode(value);
             }}
             maxLength={6}

@@ -1,46 +1,47 @@
 // components/shared/ProductCard.tsx
-import { Link } from "react-router-dom";
-import { Product } from "../types";
-import clsx from "clsx";
+import { Link } from 'react-router-dom';
+import { Product } from '../types';
+import clsx from 'clsx';
 
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product) => void;
   className?: string;
   imageClassName?: string;
-  variant?: "default" | "compact";
+  variant?: 'default' | 'compact';
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onAddToCart,
-  className = "",
-  imageClassName = "h-48",
-  variant = "default",
+  className = '',
+  imageClassName = 'h-48',
+  variant = 'default',
 }) => {
   return (
     <div
       className={clsx(
-        "bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg",
-        variant === "default" && "hover:-translate-y-1",
-        className,
+        'bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg',
+        variant === 'default' && 'hover:-translate-y-1',
+        className
       )}
     >
       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden">
         <img
+          loading="lazy"
           src={product.image}
           alt={product.name}
           className={clsx(
-            "w-full object-cover transition-transform duration-300 group-hover:scale-105",
-            imageClassName,
+            'w-full object-cover transition-transform duration-300 group-hover:scale-105',
+            imageClassName
           )}
         />
       </div>
 
       <div
         className={clsx(
-          "p-5 flex flex-col justify-between",
-          variant === "compact" && "p-4",
+          'p-5 flex flex-col justify-between',
+          variant === 'compact' && 'p-4'
         )}
       >
         <div>
@@ -49,7 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </h3>
           <p className="mt-2 text-gray-600 font-medium">Rs {product.price}</p>
 
-          {variant === "default" && product!.features!.length > 0 && (
+          {variant === 'default' && product!.features!.length > 0 && (
             <ul className="mt-3 space-y-1 text-sm text-gray-500">
               {product!.features!.map((feature, index) => (
                 <li key={index}>• {feature}</li>
@@ -60,8 +61,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <div
           className={clsx(
-            "flex flex-col gap-2",
-            variant === "default" ? "mt-5" : "mt-3",
+            'flex flex-col gap-2',
+            variant === 'default' ? 'mt-5' : 'mt-3'
           )}
         >
           <Link

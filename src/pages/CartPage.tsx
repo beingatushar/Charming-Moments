@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
-import useCartStore from "../store/cartStore";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import AddressForm from "../components/AddressForm";
-import { generateCheckoutMessage } from "../utils/utils";
+import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import useCartStore from '../store/cartStore';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import AddressForm from '../components/AddressForm';
+import { generateCheckoutMessage } from '../utils/utils';
 
 // CartItem Component
 interface CartItemProps {
@@ -26,6 +26,7 @@ const CartItem: React.FC<CartItemProps> = ({
 }) => (
   <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
     <img
+      loading="lazy"
       src={item.image}
       alt={item.name}
       className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
@@ -59,34 +60,34 @@ const CartItem: React.FC<CartItemProps> = ({
 // Hook for form state and validation
 const useAddressForm = () => {
   const [form, setForm] = useState({
-    name: "",
-    mobile: "",
-    houseNumber: "",
-    area: "",
-    pincode: "",
-    city: "",
-    state: "",
+    name: '',
+    mobile: '',
+    houseNumber: '',
+    area: '',
+    pincode: '',
+    city: '',
+    state: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const updateField = useCallback((field: keyof typeof form, value: string) => {
     setForm((f) => ({ ...f, [field]: value }));
-    setErrors((errs) => ({ ...errs, [field]: "" })); // Clear error on change
+    setErrors((errs) => ({ ...errs, [field]: '' })); // Clear error on change
   }, []);
 
   const validate = useCallback(() => {
     const newErrors: Record<string, string> = {};
-    if (!form.name.trim()) newErrors.name = "Name is required.";
+    if (!form.name.trim()) newErrors.name = 'Name is required.';
     if (!/^\d{10}$/.test(form.mobile))
-      newErrors.mobile = "Enter a valid 10-digit number.";
+      newErrors.mobile = 'Enter a valid 10-digit number.';
     if (!form.houseNumber.trim())
-      newErrors.houseNumber = "House number is required.";
-    if (!form.area.trim()) newErrors.area = "Area is required.";
+      newErrors.houseNumber = 'House number is required.';
+    if (!form.area.trim()) newErrors.area = 'Area is required.';
     if (!/^\d{6}$/.test(form.pincode))
-      newErrors.pincode = "Pincode must be 6 digits.";
-    if (!form.city.trim()) newErrors.city = "City is required.";
-    if (!form.state.trim()) newErrors.state = "State is required.";
+      newErrors.pincode = 'Pincode must be 6 digits.';
+    if (!form.city.trim()) newErrors.city = 'City is required.';
+    if (!form.state.trim()) newErrors.state = 'State is required.';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -113,7 +114,7 @@ const CartPage: React.FC = () => {
 
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
-    0,
+    0
   );
 
   const handleCheckout = useCallback(
@@ -140,9 +141,9 @@ const CartPage: React.FC = () => {
         ? `whatsapp://send?phone=${import.meta.env.VITE_CONTACT_PHONE}&text=${encodedMessage}`
         : `https://web.whatsapp.com/send?phone=${import.meta.env.VITE_CONTACT_PHONE}&text=${encodedMessage}`;
 
-      window.open(whatsappUrl, isMobile ? "_self" : "_blank");
+      window.open(whatsappUrl, isMobile ? '_self' : '_blank');
     },
-    [cart, form, validate],
+    [cart, form, validate]
   );
 
   if (cart.length === 0)
@@ -177,13 +178,13 @@ const CartPage: React.FC = () => {
         <AddressForm
           {...form}
           errors={errors}
-          setName={(v) => updateField("name", v)}
-          setMobile={(v) => updateField("mobile", v)}
-          setHouseNumber={(v) => updateField("houseNumber", v)}
-          setArea={(v) => updateField("area", v)}
-          setPincode={(v) => updateField("pincode", v)}
-          setCity={(v) => updateField("city", v)}
-          setState={(v) => updateField("state", v)}
+          setName={(v) => updateField('name', v)}
+          setMobile={(v) => updateField('mobile', v)}
+          setHouseNumber={(v) => updateField('houseNumber', v)}
+          setArea={(v) => updateField('area', v)}
+          setPincode={(v) => updateField('pincode', v)}
+          setCity={(v) => updateField('city', v)}
+          setState={(v) => updateField('state', v)}
         />
 
         <div className="text-right space-y-4">

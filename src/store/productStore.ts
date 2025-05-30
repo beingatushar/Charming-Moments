@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { ApiError, Product } from "../types";
-import axios, { AxiosError } from "axios";
+import { create } from 'zustand';
+import { ApiError, Product } from '../types';
+import axios, { AxiosError } from 'axios';
 
 interface ProductStore {
   loading: boolean;
@@ -11,7 +11,7 @@ interface ProductStore {
   deleteProduct: (id: string) => Promise<string>;
   updateProduct: (
     id: string,
-    updatedProduct: Partial<Product>,
+    updatedProduct: Partial<Product>
   ) => Promise<Product>;
   createProduct: (newProduct: Partial<Product>) => Promise<Product>;
 }
@@ -24,7 +24,7 @@ const handleApiError = (error: unknown): string => {
     return err.response?.data?.message || err.message;
   }
   // Fallback for non-Axios errors (in case an unexpected error is thrown)
-  return "An unknown error occurred";
+  return 'An unknown error occurred';
 };
 
 const useProductStore = create<ProductStore>((set) => ({
@@ -35,7 +35,7 @@ const useProductStore = create<ProductStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Product[]>(
-        `${import.meta.env.VITE_BACKEND_URL}/api/products`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products`
       );
       set({ loading: false });
       return response.data;
@@ -49,7 +49,7 @@ const useProductStore = create<ProductStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Product>(
-        `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`
       );
       set({ loading: false });
       return response.data;
@@ -64,10 +64,10 @@ const useProductStore = create<ProductStore>((set) => ({
     try {
       const productToCreate = newProduct.id
         ? newProduct
-        : { ...newProduct, id: "temp-here" };
+        : { ...newProduct, id: 'temp-here' };
       const response = await axios.post<Product>(
         `${import.meta.env.VITE_BACKEND_URL}/api/products`,
-        productToCreate,
+        productToCreate
       );
       set({ loading: false });
       return response.data;
@@ -82,7 +82,7 @@ const useProductStore = create<ProductStore>((set) => ({
     try {
       const response = await axios.put<Product>(
         `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
-        updatedProduct,
+        updatedProduct
       );
       set({ loading: false });
       return response.data;
@@ -96,7 +96,7 @@ const useProductStore = create<ProductStore>((set) => ({
     set({ loading: true, error: null });
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`
       );
       set({ loading: false });
       return `Product ${id} deleted successfully`;
@@ -118,9 +118,9 @@ const useProductStore = create<ProductStore>((set) => ({
 
     const uploadChunk = async (start: number, end: number): Promise<any> => {
       const formData = new FormData();
-      formData.append("file", imageFile.slice(start, end));
-      formData.append("cloud_name", CLOUD_NAME);
-      formData.append("upload_preset", UPLOAD_PRESET);
+      formData.append('file', imageFile.slice(start, end));
+      formData.append('cloud_name', CLOUD_NAME);
+      formData.append('upload_preset', UPLOAD_PRESET);
       const contentRange = `bytes ${start}-${end - 1}/${imageFile.size}`;
 
       try {
@@ -129,11 +129,11 @@ const useProductStore = create<ProductStore>((set) => ({
           formData,
           {
             headers: {
-              "X-Unique-Upload-Id": uniqueUploadId,
-              "Content-Range": contentRange,
-              "Content-Type": "multipart/form-data",
+              'X-Unique-Upload-Id': uniqueUploadId,
+              'Content-Range': contentRange,
+              'Content-Type': 'multipart/form-data',
             },
-          },
+          }
         );
         return response.data;
       } catch (error: unknown) {

@@ -1,4 +1,4 @@
-import { CartItem } from "../types";
+import { CartItem } from '../types';
 
 export const generateCheckoutMessage = (
   cart: CartItem[],
@@ -9,13 +9,13 @@ export const generateCheckoutMessage = (
     state: string;
     pincode: string;
     phone: string;
-  },
+  }
 ) => {
   // Header with bold and emoji
-  let message = "🌟 *MY ORDER DETAILS* 🌟\n\n";
+  let message = '🌟 *MY ORDER DETAILS* 🌟\n\n';
 
   // Cart Items (with product links)
-  message += "🛒 *ITEMS ORDERED:*\n";
+  message += '🛒 *ITEMS ORDERED:*\n';
   cart.forEach((item, index) => {
     const productLink = `${import.meta.env.VITE_BASE_URL}/product/${item.id}`;
     message += `*${index + 1}. ${item.name}* 🔗 [View Product](${productLink})\n`;
@@ -31,7 +31,7 @@ export const generateCheckoutMessage = (
 
   // Shipping Address (if provided)
   if (address) {
-    message += "🏡 *SHIPPING ADDRESS:*\n";
+    message += '🏡 *SHIPPING ADDRESS:*\n';
     message += `👤 *Name:* ${address.name}\n`;
     message += `📍 *Address:* ${address.street}, ${address.city}\n`;
     message += `🏙️ *State:* ${address.state} (${address.pincode})\n`;
@@ -40,9 +40,9 @@ export const generateCheckoutMessage = (
 
   // Footer (polite request + emoji)
   message +=
-    "📢 *Please confirm my order and let me know the expected delivery date.*\n";
+    '📢 *Please confirm my order and let me know the expected delivery date.*\n';
   // message += "⏳ *We'll process it within 24 hours!*\n";
-  message += "🙏 *Looking forward to recieve my order!* ❤️";
+  message += '🙏 *Looking forward to recieve my order!* ❤️';
 
   return message;
 };

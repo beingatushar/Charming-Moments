@@ -1,13 +1,13 @@
 // components/ProductList.tsx
-import { Link, useSearchParams } from "react-router-dom";
-import useCartStore from "../store/cartStore";
-import toast from "react-hot-toast";
-import { Product } from "../types";
-import useProductStore from "../store/productStore";
-import Spinner from "./Spinner";
-import { useCallback, useMemo } from "react";
-import { ProductCard } from "./ProductCard";
-import clsx from "clsx";
+import { Link, useSearchParams } from 'react-router-dom';
+import useCartStore from '../store/cartStore';
+import toast from 'react-hot-toast';
+import { Product } from '../types';
+import useProductStore from '../store/productStore';
+import Spinner from './Spinner';
+import { useCallback, useMemo } from 'react';
+import { ProductCard } from './ProductCard';
+import clsx from 'clsx';
 
 interface ProductListProps {
   products: Product[];
@@ -18,13 +18,13 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { addToCart } = useCartStore();
 
-  const sortBy = searchParams.get("sortBy") || "default";
-  const selectedCategory = searchParams.get("category");
+  const sortBy = searchParams.get('sortBy') || 'default';
+  const selectedCategory = searchParams.get('category');
 
   // Unique categories from products
   const categories = useMemo(
     () => Array.from(new Set(products.map(({ category }) => category))),
-    [products],
+    [products]
   );
 
   // Filter by selected category or show all
@@ -38,25 +38,25 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
       switch (sortBy) {
-        case "price-low-to-high":
+        case 'price-low-to-high':
           return a.price - b.price;
-        case "price-high-to-low":
+        case 'price-high-to-low':
           return b.price - a.price;
-        case "date-added-newest":
+        case 'date-added-newest':
           return (
-            new Date(b.dateAdded || "").getTime() -
-            new Date(a.dateAdded || "").getTime()
+            new Date(b.dateAdded || '').getTime() -
+            new Date(a.dateAdded || '').getTime()
           );
-        case "date-added-oldest":
+        case 'date-added-oldest':
           return (
-            new Date(a.dateAdded || "").getTime() -
-            new Date(b.dateAdded || "").getTime()
+            new Date(a.dateAdded || '').getTime() -
+            new Date(b.dateAdded || '').getTime()
           );
-        case "rating-high-to-low":
+        case 'rating-high-to-low':
           return (b.rating ?? 0) - (a.rating ?? 0);
-        case "name-a-z":
+        case 'name-a-z':
           return a.name.localeCompare(b.name);
-        case "name-z-a":
+        case 'name-z-a':
           return b.name.localeCompare(a.name);
         default:
           return 0;
@@ -75,18 +75,18 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       }
       setSearchParams(newParams);
     },
-    [searchParams, setSearchParams],
+    [searchParams, setSearchParams]
   );
 
   const handleSortChange = useCallback(
     (value: string) =>
-      updateSearchParams("sortBy", value === "default" ? null : value),
-    [updateSearchParams],
+      updateSearchParams('sortBy', value === 'default' ? null : value),
+    [updateSearchParams]
   );
 
   const handleCategoryChange = useCallback(
-    (category: string | null) => updateSearchParams("category", category),
-    [updateSearchParams],
+    (category: string | null) => updateSearchParams('category', category),
+    [updateSearchParams]
   );
 
   const handleAddToCart = useCallback(
@@ -95,12 +95,12 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.image ?? "https://via.placeholder.com/150",
+        image: product.image ?? 'https://via.placeholder.com/150',
         quantity: 1,
       });
       toast.success(`${product.name} added to cart!`);
     },
-    [addToCart],
+    [addToCart]
   );
 
   if (loading) return <Spinner />;
@@ -108,10 +108,10 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   // Returns the button classes based on selection
   const getCategoryButtonClass = (isSelected: boolean) =>
     clsx(
-      "px-5 py-2 text-sm font-medium rounded-full transition duration-300",
+      'px-5 py-2 text-sm font-medium rounded-full transition duration-300',
       isSelected
-        ? "bg-pink-600 text-white shadow-lg"
-        : "bg-gray-100 text-gray-700 hover:bg-pink-500 hover:text-white",
+        ? 'bg-pink-600 text-white shadow-lg'
+        : 'bg-gray-100 text-gray-700 hover:bg-pink-500 hover:text-white'
     );
 
   return (
@@ -134,7 +134,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             className={getCategoryButtonClass(selectedCategory === category)}
             aria-pressed={selectedCategory === category}
           >
-            {category.replace(/-/g, " ")}
+            {category.replace(/-/g, ' ')}
           </button>
         ))}
       </div>

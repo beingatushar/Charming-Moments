@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
   FaBars,
   FaTimes,
   FaShoppingCart,
   FaUser,
   FaShoppingBag,
-} from "react-icons/fa";
+} from 'react-icons/fa';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,15 +19,15 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const linkStyles =
-    "text-gray-800 hover:text-pink-500 transition duration-300";
-  const activeLinkStyles = "text-pink-500 font-bold";
+    'text-gray-800 hover:text-pink-500 transition duration-300';
+  const activeLinkStyles = 'text-pink-500 font-bold';
 
   // Navigation links with labels
   const navLinks = [
-    { to: "/", label: "Home" },
-    { to: "/shop", label: "Shop" },
-    { to: "/about", label: "About Us" },
-    { to: "/contact", label: "Contact" },
+    { to: '/', label: 'Home' },
+    { to: '/shop', label: 'Shop' },
+    { to: '/about', label: 'About Us' },
+    { to: '/contact', label: 'Contact' },
   ];
 
   // Separate cart icon from text links
@@ -58,7 +58,7 @@ const Header: React.FC = () => {
               <Link
                 key={to}
                 to={to}
-                className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
+                className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ''}`}
               >
                 {label}
               </Link>
@@ -73,7 +73,7 @@ const Header: React.FC = () => {
             to="/cart"
             aria-label="Cart"
             className={`rounded-full p-2 bg-pink-100 text-pink-600 hover:bg-pink-200 hover:text-pink-700 transition-colors duration-200 shadow-md ${
-              isActive("/cart") ? "ring-2 ring-pink-500" : ""
+              isActive('/cart') ? 'ring-2 ring-pink-500' : ''
             }`}
           >
             <FaShoppingBag size={24} />
@@ -89,7 +89,7 @@ const Header: React.FC = () => {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`${linkStyles} ${isActive(item.to) ? activeLinkStyles : ""} text-center`}
+                className={`${linkStyles} ${isActive(item.to) ? activeLinkStyles : ''} text-center`}
                 onClick={toggleMenu}
               >
                 {item.label}

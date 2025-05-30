@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
-import useCartStore from "../store/cartStore";
-import useProductStore from "../store/productStore";
-import toast from "react-hot-toast";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { Product } from "../types";
-import Spinner from "../components/Spinner";
-import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import useCartStore from '../store/cartStore';
+import useProductStore from '../store/productStore';
+import toast from 'react-hot-toast';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { Product } from '../types';
+import Spinner from '../components/Spinner';
+import { FaSearchMinus, FaSearchPlus } from 'react-icons/fa';
 
 // ProductNotFound Component
 const ProductNotFound: React.FC = () => (
@@ -107,6 +107,7 @@ const ProductImage: React.FC<{ image: string; name: string }> = ({
     <>
       <div className="relative flex justify-center items-center">
         <img
+          loading="lazy"
           src={image}
           alt={name}
           className="w-full h-96 object-cover rounded-lg"
@@ -126,7 +127,7 @@ const ProductImage: React.FC<{ image: string; name: string }> = ({
         >
           <div
             className="relative bg-white rounded-lg overflow-hidden"
-            style={{ width: "80vw", height: "80vh" }}
+            style={{ width: '80vw', height: '80vh' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
@@ -141,12 +142,13 @@ const ProductImage: React.FC<{ image: string; name: string }> = ({
               onTouchEnd={handleTouchEnd}
             >
               <img
+                loading="lazy"
                 src={image}
                 alt={name}
                 style={{
                   transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-                  transformOrigin: "center center",
-                  transition: dragging ? "none" : "transform 0.3s ease",
+                  transformOrigin: 'center center',
+                  transition: dragging ? 'none' : 'transform 0.3s ease',
                 }}
                 className="w-full h-full object-contain select-none cursor-grab"
                 draggable={false}
@@ -239,7 +241,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 }) => (
   <div className="bg-white shadow-lg rounded-lg overflow-hidden">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-      <ProductImage image={product.image || ""} name={product.name} />
+      <ProductImage image={product.image || ''} name={product.name} />
       <ProductInformation product={product} onAddToCart={onAddToCart} />
     </div>
   </div>
@@ -260,7 +262,7 @@ const ProductPage: React.FC = () => {
         const fetchedProduct = await findById(productId);
         setProduct(fetchedProduct);
       } catch (err) {
-        console.error("Error fetching product:", err);
+        console.error('Error fetching product:', err);
       }
     };
     loadProduct();
@@ -272,7 +274,7 @@ const ProductPage: React.FC = () => {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.image || "https://via.placeholder.com/150",
+        image: product.image || 'https://via.placeholder.com/150',
         quantity: 1,
       });
       toast.success(`${product.name} added to cart!`);

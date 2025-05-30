@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface HeroSectionProps {
   title: string;
@@ -15,7 +15,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   // Group text-related classes for readability
-  const textStyles = "text-5xl font-bold text-white text-center";
+  const textStyles = 'text-5xl font-bold text-white text-center';
 
   return (
     <section

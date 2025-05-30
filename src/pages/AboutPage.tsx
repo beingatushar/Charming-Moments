@@ -1,7 +1,7 @@
-import React, { memo } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import HeroSection from "../components/HeroSection";
+import React, { memo } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import HeroSection from '../components/HeroSection';
 
 // TeamMember Component
 interface TeamMemberProps {
@@ -20,6 +20,7 @@ const TeamMember: React.FC<TeamMemberProps> = memo(({ member }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden text-center">
       <img
+        loading="lazy"
         src={image}
         alt={`Photo of ${name}`}
         className="w-full h-48 object-cover"
@@ -38,27 +39,27 @@ const TeamSection: React.FC = memo(() => {
   const teamMembers = [
     {
       id: 1,
-      name: "Pooja Arora",
-      role: "Founder & CEO",
-      image: "https://picsum.photos/1520",
+      name: 'Pooja Arora',
+      role: 'Founder & CEO',
+      image: 'https://picsum.photos/1520',
       description:
-        "Pooja is the visionary founder and leader of Charming Moments, with over 10 years of experience in creating unique resin crafts and building the brand.",
+        'Pooja is the visionary founder and leader of Charming Moments, with over 10 years of experience in creating unique resin crafts and building the brand.',
     },
     {
       id: 2,
-      name: "Vanshita Arora",
-      role: "Operations Lead",
-      image: "https://picsum.photos/1530",
+      name: 'Vanshita Arora',
+      role: 'Operations Lead',
+      image: 'https://picsum.photos/1530',
       description:
-        "Vanshita manages daily operations, ensuring smooth production and delivery of all products while maintaining quality standards.",
+        'Vanshita manages daily operations, ensuring smooth production and delivery of all products while maintaining quality standards.',
     },
     {
       id: 3,
-      name: "Tushar Aggarwal",
-      role: "Web Designer & Developer",
-      image: "https://picsum.photos/1502",
+      name: 'Tushar Aggarwal',
+      role: 'Web Designer & Developer',
+      image: 'https://picsum.photos/1502',
       description:
-        "Tushar designs and develops the digital presence of Charming Moments, creating seamless online experiences for customers.",
+        'Tushar designs and develops the digital presence of Charming Moments, creating seamless online experiences for customers.',
     },
   ];
 

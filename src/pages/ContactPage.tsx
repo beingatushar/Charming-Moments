@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import HeroSection from "../components/HeroSection";
+import React, { useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import HeroSection from '../components/HeroSection';
 
 // ContactForm Component
 const ContactForm: React.FC = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
   const validateForm = () => {
     if (!name.trim()) {
-      alert("Please enter your name");
+      alert('Please enter your name');
       return false;
     }
     if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email)) {
-      alert("Please enter a valid email");
+      alert('Please enter a valid email');
       return false;
     }
     if (!message.trim()) {
-      alert("Please enter your message");
+      alert('Please enter your message');
       return false;
     }
     return true;
@@ -43,13 +43,13 @@ const ContactForm: React.FC = () => {
       ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`
       : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
 
-    window.open(whatsappUrl, isMobile ? "_self" : "_blank");
+    window.open(whatsappUrl, isMobile ? '_self' : '_blank');
   };
 
   return (
     <section className="container mx-auto px-6 py-8">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-        {import.meta.env.VITE_CONTACT_TITLE || "Get in Touch With Us"}
+        {import.meta.env.VITE_CONTACT_TITLE || 'Get in Touch With Us'}
       </h2>
 
       <div className="mt-8 max-w-2xl mx-auto">

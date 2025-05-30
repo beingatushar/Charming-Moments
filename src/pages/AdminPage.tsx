@@ -1,20 +1,20 @@
 // src/pages/AdminPage.tsx
 
-import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import HeroSection from "../components/HeroSection";
-import { Product } from "../types";
-import useProductStore from "../store/productStore";
-import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import HeroSection from '../components/HeroSection';
+import { Product } from '../types';
+import useProductStore from '../store/productStore';
+import { toast } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 // ProductForm Component
 interface ProductFormProps {
   newProduct: Partial<Product>;
   isEditing: boolean;
   onInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
@@ -34,7 +34,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
       <h2 className="text-xl font-bold text-gray-800 mb-4">
-        {isEditing ? "Edit Product" : "Add New Product"}
+        {isEditing ? 'Edit Product' : 'Add New Product'}
       </h2>
       <form
         onSubmit={(e) => {
@@ -109,7 +109,7 @@ const InputField: React.FC<InputFieldProps> = ({
   id,
   value,
   onChange,
-  type = "text",
+  type = 'text',
 }) => (
   <div className="flex flex-col">
     <label htmlFor={id} className="text-sm font-medium text-gray-700 mb-1">
@@ -154,6 +154,7 @@ const ImageUploadField: React.FC<{
           Image Preview
         </label>
         <img
+          loading="lazy"
           src={newProduct.image}
           alt="Product Preview"
           className="w-32 h-32 object-cover rounded-lg"
@@ -170,9 +171,9 @@ const SubmitButton: React.FC<{ isEditing: boolean; loading: boolean }> = ({
   <button
     type="submit"
     disabled={loading}
-    className={`w-full sm:w-auto ${loading ? "bg-pink-300" : "bg-pink-500"} text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300`}
+    className={`w-full sm:w-auto ${loading ? 'bg-pink-300' : 'bg-pink-500'} text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300`}
   >
-    {loading ? "Saving..." : isEditing ? "Update Product" : "Add Product"}
+    {loading ? 'Saving...' : isEditing ? 'Update Product' : 'Add Product'}
   </button>
 );
 
@@ -193,7 +194,7 @@ interface InputFieldProps {
   type?: string;
   value?: any;
   onChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
 }
 
@@ -233,6 +234,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 <td className="px-4 py-2">
                   {product.image && (
                     <img
+                      loading="lazy"
                       src={product.image}
                       alt={product.name}
                       className="w-16 h-16 object-cover rounded-lg"
@@ -286,12 +288,12 @@ const AdminPage: React.FC = () => {
   } = useProductStore();
 
   const initialProduct = () => ({
-    category: "",
-    name: "",
-    description: "",
+    category: '',
+    name: '',
+    description: '',
     price: 0,
     // stock: 0,
-    image: "",
+    image: '',
   });
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -302,14 +304,14 @@ const AdminPage: React.FC = () => {
 
   useEffect(() => {
     const loadProducts = async () => {
-      const loadingToast = toast.loading("Loading products...");
+      const loadingToast = toast.loading('Loading products...');
       try {
         const fetchedProducts = await fetchAllProducts();
         setProducts(fetchedProducts);
-        toast.success("Products loaded successfully!");
+        toast.success('Products loaded successfully!');
       } catch (err) {
         console.error(err);
-        toast.error("Failed to fetch products.");
+        toast.error('Failed to fetch products.');
       } finally {
         toast.dismiss(loadingToast);
       }
@@ -318,7 +320,7 @@ const AdminPage: React.FC = () => {
   }, [fetchAllProducts]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setNewProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
@@ -328,14 +330,14 @@ const AdminPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const uploadingToast = toast.loading("Uploading image...");
+    const uploadingToast = toast.loading('Uploading image...');
     try {
       const imageUrl = await uploadImage(file);
       setNewProduct((prevProduct) => ({ ...prevProduct, image: imageUrl }));
-      toast.success("Image uploaded successfully!");
+      toast.success('Image uploaded successfully!');
     } catch (err) {
       console.error(err);
-      toast.error("Image upload failed.");
+      toast.error('Image upload failed.');
     } finally {
       toast.dismiss(uploadingToast);
     }
@@ -343,11 +345,11 @@ const AdminPage: React.FC = () => {
 
   const validateProduct = (): boolean => {
     if (!newProduct.name?.trim())
-      return toast.error("Product name is required"), false;
+      return toast.error('Product name is required'), false;
     if (!newProduct.category?.trim())
-      return toast.error("Category is required"), false;
+      return toast.error('Category is required'), false;
     if (!newProduct.price || newProduct.price <= 0)
-      return toast.error("Price must be greater than 0"), false;
+      return toast.error('Price must be greater than 0'), false;
     // if (newProduct.stock === undefined || newProduct.stock < 0)
     //   return toast.error("Stock must be 0 or greater"), false;
     return true;
@@ -357,49 +359,49 @@ const AdminPage: React.FC = () => {
     if (!validateProduct()) return;
 
     const savingToast = toast.loading(
-      isEditing ? "Updating product..." : "Adding product...",
+      isEditing ? 'Updating product...' : 'Adding product...'
     );
 
     try {
       if (isEditing && editingProductId) {
         const updatedProduct = await updateProduct(
           editingProductId,
-          newProduct,
+          newProduct
         );
         setProducts((prevProducts) =>
           prevProducts.map((p) =>
-            p.id === editingProductId ? updatedProduct : p,
-          ),
+            p.id === editingProductId ? updatedProduct : p
+          )
         );
-        toast.success("Product updated successfully!");
+        toast.success('Product updated successfully!');
       } else {
         const productWithId = { ...newProduct, id: `temp-${Date.now()}` };
         const createdProduct = await createProduct(productWithId);
         setProducts((prevProducts) => [...prevProducts, createdProduct]);
-        toast.success("Product added successfully!");
+        toast.success('Product added successfully!');
       }
       resetForm();
     } catch (err) {
       console.error(err);
-      toast.error("Failed to save product.");
+      toast.error('Failed to save product.');
     } finally {
       toast.dismiss(savingToast);
     }
   };
 
   const handleDeleteProduct = async (id: string) => {
-    if (!window.confirm("Are you sure you want to delete this product?"))
+    if (!window.confirm('Are you sure you want to delete this product?'))
       return;
 
-    const deletingToast = toast.loading("Deleting product...");
+    const deletingToast = toast.loading('Deleting product...');
 
     try {
       await deleteProduct(id);
       setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
-      toast.success("Product deleted successfully!");
+      toast.success('Product deleted successfully!');
     } catch (err) {
       console.error(err);
-      toast.error("Failed to delete product.");
+      toast.error('Failed to delete product.');
     } finally {
       toast.dismiss(deletingToast);
     }

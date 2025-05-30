@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
-import ProductList from "../components/ProductList";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import HeroSection from "../components/HeroSection";
-import useProductStore from "../store/productStore";
-import { Product } from "../types";
-import Spinner from "../components/Spinner";
+import React, { useEffect, useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import ProductList from '../components/ProductList';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import HeroSection from '../components/HeroSection';
+import useProductStore from '../store/productStore';
+import { Product } from '../types';
+import Spinner from '../components/Spinner';
 
 const ShopPage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const category = searchParams.get("category");
+  const category = searchParams.get('category');
   const { fetchAllProducts } = useProductStore();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,8 +25,8 @@ const ShopPage: React.FC = () => {
         const products = await fetchAllProducts();
         setAllProducts(products);
       } catch (err) {
-        console.error("Error fetching products:", err);
-        setError("There was an issue fetching the products.");
+        console.error('Error fetching products:', err);
+        setError('There was an issue fetching the products.');
       } finally {
         setLoading(false);
       }
@@ -41,7 +41,7 @@ const ShopPage: React.FC = () => {
       category
         ? allProducts.filter((product) => product.category === category)
         : allProducts,
-    [category, allProducts],
+    [category, allProducts]
   );
 
   return (

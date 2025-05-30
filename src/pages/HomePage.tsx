@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import HeroSection from "../components/HeroSection";
-import CategorySlider from "../components/CategorySlider";
-import useCartStore from "../store/cartStore";
-import toast from "react-hot-toast";
-import useProductStore from "../store/productStore";
-import Spinner from "../components/Spinner"; // Ensure Spinner is imported
-import { Product } from "../types";
+import React, { useEffect, useState } from 'react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import HeroSection from '../components/HeroSection';
+import CategorySlider from '../components/CategorySlider';
+import useCartStore from '../store/cartStore';
+import toast from 'react-hot-toast';
+import useProductStore from '../store/productStore';
+import Spinner from '../components/Spinner'; // Ensure Spinner is imported
+import { Product } from '../types';
 
 const HomePage: React.FC = () => {
   // Destructure and provide better names for clarity
@@ -22,8 +22,8 @@ const HomePage: React.FC = () => {
         const products = await fetchAllProducts();
         setAllProducts(products);
       } catch (error) {
-        console.error("Error fetching products:", error);
-        toast.error("Failed to load products. Please try again.");
+        console.error('Error fetching products:', error);
+        toast.error('Failed to load products. Please try again.');
       }
     };
 
@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
 
   // Dynamically generate unique categories
   const categories = Array.from(
-    new Set(allProducts.map((product) => product.category)),
+    new Set(allProducts.map((product) => product.category))
   );
 
   // Organize products into categories and limit to 5 products per category
@@ -49,7 +49,7 @@ const HomePage: React.FC = () => {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image || "https://via.placeholder.com/150", // Default placeholder image
+      image: product.image || 'https://via.placeholder.com/150', // Default placeholder image
       quantity: 1,
     });
     toast.success(`${product.name} added to cart!`);
