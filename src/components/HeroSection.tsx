@@ -19,7 +19,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <section
-      className="bg-cover bg-center h-96"
+      className="bg-cover bg-center min-h-96 max-h-[80vh]"
       style={heroSectionStyles}
       aria-label={title} // Adds accessibility support
     >

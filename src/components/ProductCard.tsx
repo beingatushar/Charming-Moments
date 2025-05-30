@@ -21,7 +21,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <div
       className={clsx(
-        'min-h-[400px] flex flex-col justify-between bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg',
+        'min-h-[350px] flex flex-col justify-between bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg',
         variant === 'default' && 'hover:-translate-y-1',
         className
       )}
