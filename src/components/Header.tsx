@@ -35,7 +35,7 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white bg-opacity-90 backdrop-blur-md fixed w-full z-50 shadow-sm">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
+        {/* Left: Logo */}
         <Link
           to="/"
           className="text-2xl font-bold text-gray-800 hover:text-pink-500 transition duration-300"
@@ -43,7 +43,7 @@ const Header: React.FC = () => {
           Charming Moments
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Center: Desktop Navigation */}
         <div className="hidden md:flex space-x-6 items-center">
           <nav className="flex space-x-6 items-center">
             {navLinks.map(({ to, label }) => (
@@ -56,25 +56,28 @@ const Header: React.FC = () => {
               </Link>
             ))}
           </nav>
-          {/* Cart Icon */}
+        </div>
+
+        {/* Right: Cart + Mobile Toggle */}
+        <div className="flex items-center space-x-4">
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={toggleMenu}
+            className="md:hidden text-gray-800 hover:text-pink-500 focus:outline-none"
+          >
+            {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
+          {/* Cart Icon - Always visible */}
           <Link
             to="/cart"
             aria-label="Cart"
-            className={`ml-4 rounded-full p-2 bg-pink-100 text-pink-600 hover:bg-pink-200 hover:text-pink-700 transition-colors duration-200 shadow-md ${
+            className={`rounded-full p-2 bg-pink-100 text-pink-600 hover:bg-pink-200 hover:text-pink-700 transition-colors duration-200 shadow-md ${
               isActive("/cart") ? "ring-2 ring-pink-500" : ""
             }`}
           >
             <FaShoppingBag size={24} />
           </Link>
         </div>
-
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={toggleMenu}
-          className="md:hidden text-gray-800 hover:text-pink-500 focus:outline-none"
-        >
-          {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
       </div>
 
       {/* Mobile Navigation */}
@@ -91,17 +94,6 @@ const Header: React.FC = () => {
                 {item.label}
               </Link>
             ))}
-            {/* Cart Icon */}
-            <Link
-              to="/cart"
-              aria-label="Cart"
-              onClick={toggleMenu}
-              className={`mt-4 rounded-full p-2 bg-pink-100 text-pink-600 hover:bg-pink-200 hover:text-pink-700 transition-colors duration-200 shadow-md ${
-                isActive("/cart") ? "ring-2 ring-pink-500" : ""
-              }`}
-            >
-              <FaShoppingBag size={24} />
-            </Link>
           </nav>
         </div>
       )}
