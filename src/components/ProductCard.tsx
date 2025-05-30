@@ -21,12 +21,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <div
       className={clsx(
-        'bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg',
+        'min-h-[400px] flex flex-col justify-between bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg',
         variant === 'default' && 'hover:-translate-y-1',
         className
       )}
     >
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden">
+      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden flex-shrink-0">
         <img
           loading="lazy"
           src={product.image}
@@ -40,12 +40,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <div
         className={clsx(
-          'p-5 flex flex-col justify-between',
+          'p-5 flex flex-col justify-between flex-grow',
           variant === 'compact' && 'p-4'
         )}
       >
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 hover:text-pink-600 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-800 hover:text-pink-600 transition-colors line-clamp-2">
             <Link to={`/product/${product.id}`}>{product.name}</Link>
           </h3>
           <p className="mt-2 text-gray-600 font-medium">Rs {product.price}</p>
