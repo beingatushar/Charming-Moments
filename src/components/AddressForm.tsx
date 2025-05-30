@@ -36,18 +36,53 @@ const AddressForm: React.FC<AddressFormProps> = ({
   setState,
   errors,
 }) => {
+  const [isFetching, setIsFetching] = useState(false);
+  const [pincodeError, setPincodeError] = useState("");
+
   useEffect(() => {
-    // Dummy Pincode Mapping (Replace with real API for production)
-    const pinToCityState: Record<string, { city: string; state: string }> = {
-      "110001": { city: "New Delhi", state: "Delhi" },
-      "400001": { city: "Mumbai", state: "Maharashtra" },
-      "560001": { city: "Bangalore", state: "Karnataka" },
+    const fetchPincodeDetails = async () => {
+      if (pincode.length === 6) {
+        setIsFetching(true);
+        setPincodeError("");
+
+        try {
+          const response = await fetch(
+            `https://api.postalpincode.in/pincode/${pincode}`,
+          );
+          const data = await response.json();
+
+          if (data[0].Status === "Success" && data[0].PostOffice) {
+            const firstPostOffice = data[0].PostOffice[0];
+            setCity(firstPostOffice.Block || firstPostOffice.District);
+            setState(firstPostOffice.State);
+          } else {
+            setPincodeError("Invalid pincode or no data found");
+            setCity("");
+            setState("");
+          }
+        } catch (error) {
+          console.error("Error fetching pincode details:", error);
+          setPincodeError("Failed to fetch pincode details");
+          setCity("");
+          setState("");
+        } finally {
+          setIsFetching(false);
+        }
+      } else {
+        // Clear city and state if pincode is not 6 digits
+        if (city || state) {
+          setCity("");
+          setState("");
+        }
+      }
     };
 
-    if (pincode.length === 6 && pinToCityState[pincode]) {
-      setCity(pinToCityState[pincode].city);
-      setState(pinToCityState[pincode].state);
-    }
+    // Add debounce to avoid too many API calls
+    const debounceTimer = setTimeout(() => {
+      fetchPincodeDetails();
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
   }, [pincode, setCity, setState]);
 
   return (
@@ -112,13 +147,22 @@ const AddressForm: React.FC<AddressFormProps> = ({
             type="text"
             placeholder="Pincode"
             value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ""); // Allow only numbers
+              setPincode(value);
+            }}
             maxLength={6}
             className="w-full border px-4 py-2 rounded-md"
             required
           />
           {errors.pincode && (
             <p className="text-red-500 text-sm">{errors.pincode}</p>
+          )}
+          {pincodeError && (
+            <p className="text-red-500 text-sm">{pincodeError}</p>
+          )}
+          {isFetching && (
+            <p className="text-gray-500 text-sm">Fetching details...</p>
           )}
         </div>
 
@@ -129,7 +173,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
             value={city}
             onChange={(e) => setCity(e.target.value)}
             className="w-full border px-4 py-2 rounded-md"
-            readOnly
+            readOnly={!isFetching && !!city}
           />
         </div>
 
@@ -140,7 +184,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
             value={state}
             onChange={(e) => setState(e.target.value)}
             className="w-full border px-4 py-2 rounded-md"
-            readOnly
+            readOnly={!isFetching && !!state}
           />
         </div>
       </div>
