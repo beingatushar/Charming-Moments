@@ -52,7 +52,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
           }}
         >
           {category.products.map((product) => (
-            <SwiperSlide key={product.id}>
+            <SwiperSlide key={product.id} className="py-4 rounded-4xl">
               <ProductCard
                 product={product}
                 onAddToCart={onAddToCart}
