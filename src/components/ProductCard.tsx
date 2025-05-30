@@ -36,7 +36,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
         />
       </div>
-      <div className={clsx("p-5", variant === "compact" ? "" : "flex flex-col justify-between")}>
+      <div
+        className={clsx(
+          "p-5",
+          variant === "compact" ? "" : "flex flex-col justify-between",
+        )}
+      >
         <div>
           <h3 className="text-lg font-semibold text-gray-800 group-hover:text-pink-600 transition">
             {product.name}
@@ -50,7 +55,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </ul>
           )}
         </div>
-        <div className={clsx("flex flex-col gap-2", variant === "default" ? "mt-5" : "mt-3")}>
+        <div
+          className={clsx(
+            "flex flex-col gap-2",
+            variant === "default" ? "mt-5" : "mt-3",
+          )}
+        >
           <Link
             to={`/product/${product.id}`}
             className="text-center bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-md text-sm font-semibold transition"

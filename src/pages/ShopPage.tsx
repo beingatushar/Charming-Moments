@@ -58,7 +58,7 @@ const ShopPage: React.FC = () => {
       {/* Product List */}
       <section className="container mx-auto px-6 py-8">
         {loading ? (
-          <Spinner/>
+          <Spinner />
         ) : error ? (
           <div className="text-center text-red-500">{error}</div>
         ) : (

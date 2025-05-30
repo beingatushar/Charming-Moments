@@ -230,7 +230,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 key={product.id}
                 className="border-b border-gray-200 hover:bg-gray-50 transition duration-300"
               >
-                                <td className="px-4 py-2">
+                <td className="px-4 py-2">
                   {product.image && (
                     <img
                       src={product.image}
@@ -246,9 +246,11 @@ const ProductTable: React.FC<ProductTableProps> = ({
                 {/* <td className="px-4 py-2">{product.stock}</td> */}
 
                 <td className="px-4 py-2 space-x-2">
-                <Link
+                  <Link
                     onClick={() => onEdit(product)}
-                    className="text-purple-500 hover:transition duration-300 hover:bg-purple-500 hover:text-white hover:rounded p-1" to={`/product/${product.id}`}                  >
+                    className="text-purple-500 hover:transition duration-300 hover:bg-purple-500 hover:text-white hover:rounded p-1"
+                    to={`/product/${product.id}`}
+                  >
                     View
                   </Link>
                   <button

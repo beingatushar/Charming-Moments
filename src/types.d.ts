@@ -14,3 +14,10 @@ export interface Product {
   material?: string;
   isDeleted: boolean;
 }
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+}

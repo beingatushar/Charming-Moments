@@ -1,12 +1,5 @@
 import { create } from "zustand";
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+import { CartItem } from "../types";
 
 interface CartState {
   cart: CartItem[];
