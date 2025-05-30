@@ -35,7 +35,15 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white bg-opacity-90 backdrop-blur-md fixed w-full z-50 shadow-sm">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+        {/* Mobile Menu Toggle */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden text-gray-800 hover:text-pink-500 focus:outline-none"
+        >
+          {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </button>
         {/* Left: Logo */}
+
         <Link
           to="/"
           className="text-2xl font-bold text-gray-800 hover:text-pink-500 transition duration-300"
@@ -60,13 +68,6 @@ const Header: React.FC = () => {
 
         {/* Right: Cart + Mobile Toggle */}
         <div className="flex items-center space-x-4">
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden text-gray-800 hover:text-pink-500 focus:outline-none"
-          >
-            {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-          </button>
           {/* Cart Icon - Always visible */}
           <Link
             to="/cart"

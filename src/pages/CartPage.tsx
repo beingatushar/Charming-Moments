@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import useCartStore from "../store/cartStore";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import Header from "../components/Header"; // Import Header
-import Footer from "../components/Footer"; // Import Footer
-import { generateCheckoutMessage } from "../utils/utils";
+import useCartStore from "../store/cartStore";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import AddressForm from "../components/AddressForm";
+import { generateCheckoutMessage } from "../utils/utils";
 
 // CartItem Component
 interface CartItemProps {
@@ -24,32 +24,31 @@ const CartItem: React.FC<CartItemProps> = ({
   onRemove,
   onUpdateQuantity,
 }) => (
-  <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between">
-    {/* Product Image */}
+  <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
     <img
       src={item.image}
       alt={item.name}
-      className="w-24 h-24 object-cover rounded-lg"
+      className="w-24 h-24 object-cover rounded-lg flex-shrink-0"
     />
-
-    {/* Product Details */}
-    <div className="flex-1 ml-4">
+    <div className="flex-1 ml-0 sm:ml-4">
       <h3 className="text-lg font-bold text-gray-800">{item.name}</h3>
       <p className="text-gray-600">Price: Rs {item.price}</p>
     </div>
-
-    {/* Quantity and Remove Button */}
     <div className="flex items-center space-x-4 mt-4 sm:mt-0">
       <input
         type="number"
-        min="1"
+        min={1}
         value={item.quantity}
-        onChange={(e) => onUpdateQuantity(item.id, parseInt(e.target.value))}
+        onChange={(e) =>
+          onUpdateQuantity(item.id, Math.max(1, Number(e.target.value)))
+        }
         className="w-16 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+        aria-label={`Quantity of ${item.name}`}
       />
       <button
         onClick={() => onRemove(item.id)}
         className="text-red-500 hover:text-red-700 transition duration-300"
+        aria-label={`Remove ${item.name} from cart`}
       >
         Remove
       </button>
@@ -57,48 +56,45 @@ const CartItem: React.FC<CartItemProps> = ({
   </div>
 );
 
-// CartTotal Component
-interface CartTotalProps {
-  totalPrice: number;
-  onClearCart: () => void;
-}
+// Hook for form state and validation
+const useAddressForm = () => {
+  const [form, setForm] = useState({
+    name: "",
+    mobile: "",
+    houseNumber: "",
+    area: "",
+    pincode: "",
+    city: "",
+    state: "",
+  });
 
-const CartTotal: React.FC<CartTotalProps> = ({ totalPrice, onClearCart }) => {
-  const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  return (
-    <div className="text-right">
-      <p className="text-xl font-bold text-gray-800">
-        Total: Rs {totalPrice.toFixed(2)}
-      </p>
+  const updateField = useCallback((field: keyof typeof form, value: string) => {
+    setForm((f) => ({ ...f, [field]: value }));
+    setErrors((errs) => ({ ...errs, [field]: "" })); // Clear error on change
+  }, []);
 
-      {/* Actions */}
-      <div className="mt-4 flex justify-end space-x-4">
-        <button
-          onClick={onClearCart}
-          className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-        >
-          Clear Cart
-        </button>
-        <button
-          className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-          onClick={(e) => {
-            e.preventDefault();
-            const message = generateCheckoutMessage(cart);
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://web.whatsapp.com/send?phone=${"+918586810252"}&text=${encodedMessage}`;
-            // window.location.href = whatsappUrl;
-            console.log(whatsappUrl);
-          }}
-        >
-          Checkout
-        </button>
-      </div>
-    </div>
-  );
+  const validate = useCallback(() => {
+    const newErrors: Record<string, string> = {};
+    if (!form.name.trim()) newErrors.name = "Name is required.";
+    if (!/^\d{10}$/.test(form.mobile))
+      newErrors.mobile = "Enter a valid 10-digit number.";
+    if (!form.houseNumber.trim())
+      newErrors.houseNumber = "House number is required.";
+    if (!form.area.trim()) newErrors.area = "Area is required.";
+    if (!/^\d{6}$/.test(form.pincode))
+      newErrors.pincode = "Pincode must be 6 digits.";
+    if (!form.city.trim()) newErrors.city = "City is required.";
+    if (!form.state.trim()) newErrors.state = "State is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [form]);
+
+  return { form, errors, updateField, validate };
 };
 
-// EmptyCart Component
 const EmptyCart: React.FC = () => (
   <div className="text-center">
     <p className="text-gray-600">Your cart is empty.</p>
@@ -111,136 +107,107 @@ const EmptyCart: React.FC = () => (
   </div>
 );
 
-// CartPage Component
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
-
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [houseNumber, setHouseNumber] = useState("");
-  const [area, setArea] = useState("");
-  const [pincode, setPincode] = useState("");
-  const [state, setState] = useState("");
-  const [city, setCity] = useState("");
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const { form, errors, updateField, validate } = useAddressForm();
 
   const totalPrice = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (acc, item) => acc + item.price * item.quantity,
     0,
   );
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    if (!name.trim()) newErrors.name = "Name is required.";
-    if (!/^\d{10}$/.test(mobile))
-      newErrors.mobile = "Enter a valid 10-digit number.";
-    if (!houseNumber.trim())
-      newErrors.houseNumber = "House number is required.";
-    if (!area.trim()) newErrors.area = "Area is required.";
-    if (!/^\d{6}$/.test(pincode))
-      newErrors.pincode = "Pincode must be 6 digits.";
-    if (!city.trim()) newErrors.city = "City is required.";
-    if (!state.trim()) newErrors.state = "State is required.";
+  const handleCheckout = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+      if (!validate()) return;
 
-  const handleCheckout = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+      const address = {
+        name: form.name.trim(),
+        street: `${form.houseNumber.trim()}, ${form.area.trim()}`,
+        city: form.city.trim(),
+        state: form.state.trim(),
+        pincode: form.pincode.trim(),
+        phone: form.mobile.trim(),
+      };
 
-    // ✅ Validate the form before proceeding
-    if (!validateForm()) return;
+      const message = generateCheckoutMessage(cart, address);
+      const encodedMessage = encodeURIComponent(message);
 
-    // ✅ Structure the address as expected by generateCheckoutMessage
-    const address = {
-      name: name.trim(), // Ensure trimming
-      street: `${houseNumber.trim()}, ${area.trim()}`,
-      city: city.trim(),
-      state: state.trim(),
-      pincode: pincode.trim(),
-      phone: mobile.trim(),
-    };
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    // ✅ Generate the WhatsApp message
-    const message = generateCheckoutMessage(cart, address);
-    const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = isMobile
+        ? `whatsapp://send?phone=+918586810252&text=${encodedMessage}`
+        : `https://web.whatsapp.com/send?phone=+918586810252&text=${encodedMessage}`;
 
-    // ✅ Determine if the device is mobile or desktop
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      window.open(whatsappUrl, isMobile ? "_self" : "_blank");
+    },
+    [cart, form, validate],
+  );
 
-    // ✅ Use correct WhatsApp URL schema
-    const whatsappUrl = isMobile
-      ? `whatsapp://send?phone=+918586810252&text=${encodedMessage}`
-      : `https://web.whatsapp.com/send?phone=+918586810252&text=${encodedMessage}`;
-
-    // ✅ Open WhatsApp appropriately
-    window.open(whatsappUrl, isMobile ? "_self" : "_blank");
-  };
+  if (cart.length === 0)
+    return (
+      <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 p-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-8">Your Cart</h1>
+          <EmptyCart />
+        </main>
+        <Footer />
+      </div>
+    );
 
   return (
     <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Your Cart</h1>
+      <main className="flex-1 p-6 max-w-5xl mx-auto space-y-8">
+        <h1 className="text-3xl font-bold text-gray-800">Your Cart</h1>
 
-        {cart.length === 0 ? (
-          <EmptyCart />
-        ) : (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              {cart.map((item) => (
-                <CartItem
-                  key={item.id}
-                  item={item}
-                  onRemove={removeFromCart}
-                  onUpdateQuantity={updateQuantity}
-                />
-              ))}
-            </div>
-
-            {/* 📦 Address Form */}
-            <AddressForm
-              name={name}
-              mobile={mobile}
-              houseNumber={houseNumber}
-              area={area}
-              pincode={pincode}
-              city={city}
-              state={state}
-              setName={setName}
-              setMobile={setMobile}
-              setHouseNumber={setHouseNumber}
-              setArea={setArea}
-              setPincode={setPincode}
-              setCity={setCity}
-              setState={setState}
-              errors={errors}
+        <div className="space-y-6">
+          {cart.map((item) => (
+            <CartItem
+              key={item.id}
+              item={item}
+              onRemove={removeFromCart}
+              onUpdateQuantity={updateQuantity}
             />
+          ))}
+        </div>
 
-            {/* 💰 Cart Total */}
-            <div className="text-right">
-              <p className="text-xl font-bold text-gray-800">
-                Total: Rs {totalPrice.toFixed(2)}
-              </p>
-              <div className="mt-4 flex justify-end space-x-4">
-                <button
-                  onClick={clearCart}
-                  className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600"
-                >
-                  Clear Cart
-                </button>
-                <button
-                  onClick={handleCheckout}
-                  className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600"
-                >
-                  Checkout
-                </button>
-              </div>
-            </div>
+        <AddressForm
+          {...form}
+          errors={errors}
+          setName={(v) => updateField("name", v)}
+          setMobile={(v) => updateField("mobile", v)}
+          setHouseNumber={(v) => updateField("houseNumber", v)}
+          setArea={(v) => updateField("area", v)}
+          setPincode={(v) => updateField("pincode", v)}
+          setCity={(v) => updateField("city", v)}
+          setState={(v) => updateField("state", v)}
+        />
+
+        <div className="text-right space-y-4">
+          <p className="text-xl font-bold text-gray-800">
+            Total: Rs {totalPrice.toFixed(2)}
+          </p>
+
+          <div className="flex justify-end gap-4">
+            <button
+              onClick={clearCart}
+              className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+              type="button"
+            >
+              Clear Cart
+            </button>
+            <button
+              onClick={handleCheckout}
+              className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+              type="button"
+            >
+              Checkout
+            </button>
           </div>
-        )}
+        </div>
       </main>
       <Footer />
     </div>

@@ -62,24 +62,6 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
             </SwiperSlide>
           ))}
         </Swiper>
-        {/* <button
-          className={clsx(
-            navButtonStyles,
-            "left-0",
-            `prev-button-${category.name}`,
-          )}
-        >
-          &larr;
-        </button> */}
-        {/* <button
-          className={clsx(
-            navButtonStyles,
-            "right-0",
-            `next-button-${category.name}`,
-          )}
-        >
-          &rarr;
-        </button> */}
       </div>
     </div>
   );
