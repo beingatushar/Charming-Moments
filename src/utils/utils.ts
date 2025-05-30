@@ -43,7 +43,7 @@ export const generateCheckoutMessage = (
   message +=
     "📢 *Please confirm my order and let me know the expected delivery date.*\n";
   // message += "⏳ *We'll process it within 24 hours!*\n";
-  message += "🙏 *Looking forward to receiving my order!* ❤️";
+  message += "🙏 *Looking forward to recieve my order!* ❤️";
 
   return message;
 };

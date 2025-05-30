@@ -1,23 +1,28 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation
-import { FaBars, FaTimes, FaShoppingCart, FaUser } from "react-icons/fa"; // Import icons
+import { Link, useLocation } from "react-router-dom";
+import {
+  FaBars,
+  FaTimes,
+  FaShoppingCart,
+  FaUser,
+  FaShoppingBag,
+} from "react-icons/fa";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Helper function to check if a link is active
   const isActive = (path: string) => location.pathname === path;
 
-  // Reusable link styles
   const linkStyles =
-    "text-gray-800 hover:text-pink-500 transition duration-300 text-center";
+    "text-gray-800 hover:text-pink-500 transition duration-300";
   const activeLinkStyles = "text-pink-500 font-bold";
 
+  // Navigation links with labels
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/shop", label: "Shop" },
@@ -25,10 +30,7 @@ const Header: React.FC = () => {
     { to: "/contact", label: "Contact" },
   ];
 
-  const iconLinks = [
-    { to: "/cart", icon: <FaShoppingCart size={20} /> },
-    // { to: "/admin", icon: <FaUser size={20} /> },
-  ];
+  // Separate cart icon from text links
 
   return (
     <header className="bg-white bg-opacity-90 backdrop-blur-md fixed w-full z-50 shadow-sm">
@@ -36,35 +38,34 @@ const Header: React.FC = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-bold text-gray-800 hover:text-pink-500 transition duration-300 text-center"
+          className="text-2xl font-bold text-gray-800 hover:text-pink-500 transition duration-300"
         >
           Charming Moments
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-6 items-center">
-          {navLinks.map(({ to, label }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Icons for Cart and User */}
         <div className="hidden md:flex space-x-6 items-center">
-          {iconLinks.map(({ to, icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
-            >
-              {icon}
-            </Link>
-          ))}
+          <nav className="flex space-x-6 items-center">
+            {navLinks.map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+          {/* Cart Icon */}
+          <Link
+            to="/cart"
+            aria-label="Cart"
+            className={`ml-4 rounded-full p-2 bg-pink-100 text-pink-600 hover:bg-pink-200 hover:text-pink-700 transition-colors duration-200 shadow-md ${
+              isActive("/cart") ? "ring-2 ring-pink-500" : ""
+            }`}
+          >
+            <FaShoppingBag size={24} />
+          </Link>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -79,29 +80,28 @@ const Header: React.FC = () => {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="md:hidden bg-white bg-opacity-95 backdrop-blur-md">
-          <nav className="flex flex-col space-y-4 p-6">
-            {navLinks.map(({ to, label }) => (
+          <nav className="flex flex-col space-y-4 p-6 items-center">
+            {navLinks.map((item) => (
               <Link
-                key={to}
-                to={to}
-                className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
+                key={item.to}
+                to={item.to}
+                className={`${linkStyles} ${isActive(item.to) ? activeLinkStyles : ""} text-center`}
                 onClick={toggleMenu}
               >
-                {label}
+                {item.label}
               </Link>
             ))}
-            <div className="flex space-x-6">
-              {iconLinks.map(({ to, icon }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  className={`${linkStyles} ${isActive(to) ? activeLinkStyles : ""}`}
-                  onClick={toggleMenu}
-                >
-                  {icon}
-                </Link>
-              ))}
-            </div>
+            {/* Cart Icon */}
+            <Link
+              to="/cart"
+              aria-label="Cart"
+              onClick={toggleMenu}
+              className={`mt-4 rounded-full p-2 bg-pink-100 text-pink-600 hover:bg-pink-200 hover:text-pink-700 transition-colors duration-200 shadow-md ${
+                isActive("/cart") ? "ring-2 ring-pink-500" : ""
+              }`}
+            >
+              <FaShoppingBag size={24} />
+            </Link>
           </nav>
         </div>
       )}
