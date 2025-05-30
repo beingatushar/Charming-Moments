@@ -11,7 +11,7 @@ import clsx from 'clsx'; // For cleaner class management
 
 const Footer: React.FC = () => {
   const socialLinks = {
-    instagram: 'https://instagram.com/charming_moments',
+    instagram: 'https://instagram.com/charmimg_moments',
     facebook: 'https://facebook.com',
     twitter: 'https://twitter.com',
   };

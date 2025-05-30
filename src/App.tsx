@@ -9,7 +9,7 @@ const ShopPage = React.lazy(() => import('./pages/ShopPage'));
 const AboutPage = React.lazy(() => import('./pages/AboutPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
 const CartPage = React.lazy(() => import('./pages/CartPage'));
-const AdminPage = React.lazy(() => import('./pages/AdminPage'));
+// const AdminPage = React.lazy(() => import('./pages/AdminPage'));
 const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 
 const App: React.FC = () => {

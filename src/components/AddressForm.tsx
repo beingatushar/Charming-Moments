@@ -83,7 +83,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
     }, 500);
 
     return () => clearTimeout(debounceTimer);
-  }, [pincode, setCity, setState]);
+  }, [pincode]);
 
   return (
     <div className="bg-white shadow rounded-xl p-6 space-y-4">

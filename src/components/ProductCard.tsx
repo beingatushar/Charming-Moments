@@ -46,7 +46,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       >
         <div>
           <h3 className="text-lg font-semibold text-gray-800 hover:text-pink-600 transition-colors">
-            {product.name}
+            <Link to={`/product/${product.id}`}>{product.name}</Link>
           </h3>
           <p className="mt-2 text-gray-600 font-medium">Rs {product.price}</p>
 
