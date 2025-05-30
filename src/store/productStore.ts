@@ -1,6 +1,5 @@
 import { create } from "zustand";
-import { Product } from "../types";
-import { BACKEND_URL } from "../constants";
+import { ApiError, Product } from "../types";
 import axios, { AxiosError } from "axios";
 
 interface ProductStore {
@@ -15,9 +14,6 @@ interface ProductStore {
     updatedProduct: Partial<Product>,
   ) => Promise<Product>;
   createProduct: (newProduct: Partial<Product>) => Promise<Product>;
-}
-interface ApiError {
-  message: string;
 }
 
 // Helper function for error handling
@@ -39,7 +35,7 @@ const useProductStore = create<ProductStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Product[]>(
-        `${BACKEND_URL}/api/products`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products`,
       );
       set({ loading: false });
       return response.data;
@@ -53,7 +49,7 @@ const useProductStore = create<ProductStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.get<Product>(
-        `${BACKEND_URL}/api/products/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
       );
       set({ loading: false });
       return response.data;
@@ -70,7 +66,7 @@ const useProductStore = create<ProductStore>((set) => ({
         ? newProduct
         : { ...newProduct, id: "temp-here" };
       const response = await axios.post<Product>(
-        `${BACKEND_URL}/api/products`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products`,
         productToCreate,
       );
       set({ loading: false });
@@ -85,7 +81,7 @@ const useProductStore = create<ProductStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await axios.put<Product>(
-        `${BACKEND_URL}/api/products/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
         updatedProduct,
       );
       set({ loading: false });
@@ -99,7 +95,9 @@ const useProductStore = create<ProductStore>((set) => ({
   deleteProduct: async (id: string) => {
     set({ loading: true, error: null });
     try {
-      await axios.delete(`${BACKEND_URL}/api/products/${id}`);
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
+      );
       set({ loading: false });
       return `Product ${id} deleted successfully`;
     } catch (error: unknown) {
@@ -110,9 +108,9 @@ const useProductStore = create<ProductStore>((set) => ({
 
   uploadImage: async (imageFile: File) => {
     set({ loading: true, error: null });
-
-    const CLOUD_NAME = process.env.CLOUD_NAME || "dxa3titlk"; // Move to env variables
-    const UPLOAD_PRESET = process.env.UPLOAD_PRESET || "ffdwxgii"; // Move to env variables
+    const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+    const CLOUDINARY_API_URL = import.meta.env.VITE_CLOUDINARY_API_URL;
     const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunk size
 
     const uniqueUploadId = `uqid-${Date.now()}`;
@@ -127,7 +125,7 @@ const useProductStore = create<ProductStore>((set) => ({
 
       try {
         const response = await axios.post(
-          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
+          `${CLOUDINARY_API_URL}/${CLOUD_NAME}/auto/upload`,
           formData,
           {
             headers: {

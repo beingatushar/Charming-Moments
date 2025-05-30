@@ -21,3 +21,6 @@ export interface CartItem {
   quantity: number;
   image: string;
 }
+export interface ApiError {
+  message: string;
+}

@@ -37,7 +37,7 @@ const ContactForm: React.FC = () => {
     const whatsappMessage = generateWhatsAppMessage();
     const encodedMessage = encodeURIComponent(whatsappMessage);
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const phoneNumber = "+918586810252"; // Replace with your WhatsApp number
+    const phoneNumber = import.meta.env.VITE_CONTACT_PHONE; // Replace with your WhatsApp number
 
     const whatsappUrl = isMobile
       ? `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`
@@ -49,7 +49,7 @@ const ContactForm: React.FC = () => {
   return (
     <section className="container mx-auto px-6 py-8">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-        Get in Touch With Us
+        {import.meta.env.VITE_CONTACT_TITLE || "Get in Touch With Us"}
       </h2>
 
       <div className="mt-8 max-w-2xl mx-auto">

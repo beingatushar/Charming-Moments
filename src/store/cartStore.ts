@@ -8,25 +8,37 @@ interface CartState {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   updateCart: (item: CartItem) => void; // Add the helper function to state
+
+  validateQuantity: (quantity: number) => boolean;
+  validateCartSize: () => boolean;
 }
 
-const useCartStore = create<CartState>((set) => ({
+const useCartStore = create<CartState>((set, get) => ({
   cart: [],
-
+  validateQuantity: (quantity) =>
+    quantity <= parseInt(import.meta.env.VITE_MAX_ITEM_QUANTITY || "10"),
+  validateCartSize: () =>
+    get().cart.length < parseInt(import.meta.env.VITE_MAX_CART_ITEMS || "100"),
   // Helper function to update or add item to the cart
   updateCart: (item) =>
     set((state) => {
+      if (!state.validateCartSize()) {
+        console.error("Cart is full");
+        return {};
+      }
+
       const index = state.cart.findIndex((cartItem) => cartItem.id === item.id);
       if (index !== -1) {
-        // Update the quantity if the item exists
+        const newQuantity = state.cart[index].quantity + 1;
+        if (!state.validateQuantity(newQuantity)) {
+          console.error("Maximum quantity reached");
+          return {};
+        }
+
         const updatedCart = [...state.cart];
-        updatedCart[index] = {
-          ...updatedCart[index],
-          quantity: updatedCart[index].quantity + 1,
-        };
+        updatedCart[index] = { ...updatedCart[index], quantity: newQuantity };
         return { cart: updatedCart };
       } else {
-        // Add the new item if it doesn't exist
         return { cart: [...state.cart, { ...item, quantity: 1 }] };
       }
     }),

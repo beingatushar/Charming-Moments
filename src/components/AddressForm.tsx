@@ -47,7 +47,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
 
         try {
           const response = await fetch(
-            `https://api.postalpincode.in/pincode/${pincode}`,
+            `${import.meta.env.VITE_PINCODE_API_URL}/${pincode}`,
           );
           const data = await response.json();
 

@@ -1,4 +1,3 @@
-import { BASE_URL } from "../constants";
 import { CartItem } from "../types";
 
 export const generateCheckoutMessage = (
@@ -18,7 +17,7 @@ export const generateCheckoutMessage = (
   // Cart Items (with product links)
   message += "🛒 *ITEMS ORDERED:*\n";
   cart.forEach((item, index) => {
-    const productLink = `${BASE_URL}/product/${item.id}`;
+    const productLink = `${import.meta.env.VITE_BASE_URL}/product/${item.id}`;
     message += `*${index + 1}. ${item.name}* 🔗 [View Product](${productLink})\n`;
     message += `   └ 📦 Qty: ${item.quantity}\n`;
     message += `   └ 💵 Price: ₹${item.price.toFixed(2)}\n`;

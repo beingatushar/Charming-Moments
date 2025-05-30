@@ -137,8 +137,8 @@ const CartPage: React.FC = () => {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       const whatsappUrl = isMobile
-        ? `whatsapp://send?phone=+918586810252&text=${encodedMessage}`
-        : `https://web.whatsapp.com/send?phone=+918586810252&text=${encodedMessage}`;
+        ? `whatsapp://send?phone=${import.meta.env.VITE_CONTACT_PHONE}&text=${encodedMessage}`
+        : `https://web.whatsapp.com/send?phone=${import.meta.env.VITE_CONTACT_PHONE}&text=${encodedMessage}`;
 
       window.open(whatsappUrl, isMobile ? "_self" : "_blank");
     },
