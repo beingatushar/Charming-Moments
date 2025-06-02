@@ -1,86 +1,22 @@
-import { useState, useCallback } from 'react';
-import toast from 'react-hot-toast';
-import { CartItem, Product } from '../types';
-
-const MAX_ITEM_QUANTITY = parseInt(
-  import.meta.env.VITE_MAX_ITEM_QUANTITY || '10'
-);
-const MAX_CART_ITEMS = parseInt(import.meta.env.VITE_MAX_CART_ITEMS || '100');
+import { useCallback } from 'react';
+import { Product } from '../types';
+import useCartStore from '../stores/useCartStore';
 
 export const useCart = () => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const cart = useCartStore((state) => state.cart);
+  const addToCart = useCartStore((state) => state.addToCart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const handleAddToCart = useCartStore((state) => state.handleAddToCart);
+  const validateQuantity = useCartStore((state) => state.validateQuantity);
+  const validateCartSize = useCartStore((state) => state.validateCartSize);
 
-  const validateQuantity = useCallback((quantity: number) => {
-    return quantity <= MAX_ITEM_QUANTITY;
-  }, []);
-
-  const validateCartSize = useCallback(() => {
-    return cart.length < MAX_CART_ITEMS;
-  }, [cart.length]);
-
-  const updateCart = useCallback(
-    (item: CartItem) => {
-      setCart((prevCart) => {
-        if (!validateCartSize()) {
-          console.error('Cart is full');
-          return prevCart;
-        }
-
-        const index = prevCart.findIndex((cartItem) => cartItem.id === item.id);
-        if (index !== -1) {
-          const newQuantity = prevCart[index].quantity + 1;
-          if (!validateQuantity(newQuantity)) {
-            console.error('Maximum quantity reached');
-            return prevCart;
-          }
-
-          const updatedCart = [...prevCart];
-          updatedCart[index] = { ...updatedCart[index], quantity: newQuantity };
-          return updatedCart;
-        } else {
-          return [...prevCart, { ...item, quantity: 1 }];
-        }
-      });
-    },
-    [validateCartSize, validateQuantity]
-  );
-
-  const addToCart = useCallback(
-    (item: CartItem) => {
-      updateCart(item);
-    },
-    [updateCart]
-  );
-
-  const removeFromCart = useCallback((id: string) => {
-    setCart((prevCart) => prevCart.filter((cartItem) => cartItem.id !== id));
-  }, []);
-
-  const updateQuantity = useCallback((id: string, quantity: number) => {
-    setCart((prevCart) =>
-      prevCart.map((cartItem) =>
-        cartItem.id === id ? { ...cartItem, quantity } : cartItem
-      )
-    );
-  }, []);
-
-  const clearCart = useCallback(() => {
-    setCart([]);
-  }, []);
-
-  const handleAddToCart = useCallback(
-    (product: Product) => {
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image ?? 'https://via.placeholder.com/150',
-        quantity: 1,
-      });
-      toast.success(`${product.name} added to cart!`);
-    },
-    [addToCart]
-  );
+  // You can add additional hook-specific logic here if needed
+  // For example, a memoized derived state:
+  const totalItems = useCallback(() => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  }, [cart]);
 
   return {
     cart,
@@ -91,5 +27,6 @@ export const useCart = () => {
     handleAddToCart,
     validateQuantity,
     validateCartSize,
+    totalItems, // Example of additional hook functionality
   };
 };
