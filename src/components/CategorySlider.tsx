@@ -54,7 +54,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
               <ProductCard
                 product={product}
                 variant="compact"
-                imageClassName="h-40"
+                // imageClassName="h-40"
               />
             </SwiperSlide>
           ))}
