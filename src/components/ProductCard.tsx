@@ -2,10 +2,10 @@
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import clsx from 'clsx';
+import { useCart } from '../hooks/useCart';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (product: Product) => void;
   className?: string;
   imageClassName?: string;
   variant?: 'default' | 'compact';
@@ -13,11 +13,11 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
-  onAddToCart,
   className = '',
   imageClassName = 'h-48',
   variant = 'default',
 }) => {
+  const {handleAddToCart} = useCart();
   return (
     <div
       className={clsx(
@@ -72,7 +72,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             View Details
           </Link>
           <button
-            onClick={() => onAddToCart(product)}
+            onClick={() => handleAddToCart(product)}
             aria-label={`Add ${product.name} to cart`}
             className="text-center bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-md text-sm font-semibold transition-colors"
           >

@@ -1,22 +1,22 @@
 // components/ProductList.tsx
 import { Link, useSearchParams } from 'react-router-dom';
-import useCartStore from '../store/cartStore';
 import toast from 'react-hot-toast';
 import { Product } from '../types';
-import useProductStore from '../store/productStore';
 import Spinner from './Spinner';
 import { useCallback, useMemo } from 'react';
 import { ProductCard } from './ProductCard';
 import clsx from 'clsx';
+import { useCart } from '../hooks/useCart';
+import { useProduct } from '../hooks/useProduct';
 
 interface ProductListProps {
   products: Product[];
 }
 
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
-  const { loading } = useProductStore();
+  const { loading } = useProduct();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { addToCart } = useCartStore();
+  const {handleAddToCart} = useCart();
 
   const sortBy = searchParams.get('sortBy') || 'default';
   const selectedCategory = searchParams.get('category');
@@ -89,20 +89,6 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     [updateSearchParams]
   );
 
-  const handleAddToCart = useCallback(
-    (product: Product) => {
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image ?? 'https://via.placeholder.com/150',
-        quantity: 1,
-      });
-      toast.success(`${product.name} added to cart!`);
-    },
-    [addToCart]
-  );
-
   if (loading) return <Spinner />;
 
   // Returns the button classes based on selection
@@ -163,9 +149,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         {sortedProducts.map((product) => (
           <ProductCard
             key={product.id}
-            product={product}
-            onAddToCart={handleAddToCart}
-          />
+            product={product}/>
         ))}
       </div>
     </div>

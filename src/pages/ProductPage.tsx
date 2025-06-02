@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import useCartStore from '../store/cartStore';
-import useProductStore from '../store/productStore';
 import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Product } from '../types';
 import Spinner from '../components/Spinner';
 import { FaSearchMinus, FaSearchPlus } from 'react-icons/fa';
+import { useStore } from 'zustand';
+import { useCart } from '../hooks/useCart';
+import { useProduct } from '../hooks/useProduct';
 
 // ProductNotFound Component
 const ProductNotFound: React.FC = () => (
@@ -192,57 +193,52 @@ const ProductImage: React.FC<{ image: string; name: string }> = ({
 // Product Information Component
 interface ProductInformationProps {
   product: Product;
-  onAddToCart: () => void;
 }
 
-const ProductInformation: React.FC<ProductInformationProps> = ({
-  product,
-  onAddToCart,
-}) => (
-  <div className="space-y-6">
-    <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-    <p className="text-gray-600">{product.description}</p>
-    <p className="text-2xl font-bold text-gray-800">Rs {product.price}</p>
-    {product.features && (
-      <ul className="space-y-2">
-        {product.features.map((feature, index) => (
-          <li key={index} className="text-gray-600">
-            • {feature}
-          </li>
-        ))}
-      </ul>
-    )}
-    {product.material && (
+const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
+  const{handleAddToCart}=useCart();
+  return (
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
+      <p className="text-gray-600">{product.description}</p>
+      <p className="text-2xl font-bold text-gray-800">Rs {product.price}</p>
+      {product.features && (
+        <ul className="space-y-2">
+          {product.features.map((feature, index) => (
+            <li key={index} className="text-gray-600">
+              • {feature}
+            </li>
+          ))}
+        </ul>
+      )}
+      {product.material && (
+        <p className="text-gray-600">
+          <span className="font-bold">Material:</span> {product.material}
+        </p>
+      )}
       <p className="text-gray-600">
-        <span className="font-bold">Material:</span> {product.material}
+        <span className="font-bold">Rating:</span> {product.rating}/5
       </p>
-    )}
-    <p className="text-gray-600">
-      <span className="font-bold">Rating:</span> {product.rating}/5
-    </p>
-    <button
-      onClick={onAddToCart}
-      className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
-    >
-      Add to Cart
-    </button>
-  </div>
-);
+      <button
+        onClick={()=>handleAddToCart(product)}
+        className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
+      >
+        Add to Cart
+      </button>
+    </div>
+  );
+};
 
 // Product Details Component
 interface ProductDetailsProps {
   product: Product;
-  onAddToCart: () => void;
 }
 
-const ProductDetails: React.FC<ProductDetailsProps> = ({
-  product,
-  onAddToCart,
-}) => (
+const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => (
   <div className="bg-white shadow-lg rounded-lg overflow-hidden">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
       <ProductImage image={product.image || ''} name={product.name} />
-      <ProductInformation product={product} onAddToCart={onAddToCart} />
+      <ProductInformation product={product} />
     </div>
   </div>
 );
@@ -250,8 +246,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 // ProductPage Component
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { addToCart } = useCartStore();
-  const { findById, loading } = useProductStore();
+  const { findById, loading } = useProduct();
   const [product, setProduct] = useState<Product | undefined>(undefined);
 
   // Fetch product details on load
@@ -268,15 +263,9 @@ const ProductPage: React.FC = () => {
     loadProduct();
   }, [productId, findById]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (product: Product) => {
     if (product) {
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image || 'https://via.placeholder.com/150',
-        quantity: 1,
-      });
+      handleAddToCart(product);
       toast.success(`${product.name} added to cart!`);
     }
   };
@@ -294,7 +283,7 @@ const ProductPage: React.FC = () => {
         <main className="flex-1 pt-20">
           <div className="container mx-auto px-6">
             <Breadcrumb productName={product.name} />
-            <ProductDetails product={product} onAddToCart={handleAddToCart} />
+            <ProductDetails product={product} />
           </div>
         </main>
       )}

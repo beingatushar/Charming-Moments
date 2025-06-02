@@ -5,9 +5,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HeroSection from '../components/HeroSection';
 import { Product } from '../types';
-import useProductStore from '../store/productStore';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { useProduct } from '../hooks/useProduct';
 
 // ProductForm Component
 interface ProductFormProps {
@@ -29,7 +29,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const { loading } = useProductStore();
+  const { loading } = useProduct();
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
@@ -285,7 +285,7 @@ const AdminPage: React.FC = () => {
     updateProduct,
     deleteProduct,
     uploadImage,
-  } = useProductStore();
+  } = useProduct();
 
   const initialProduct = () => ({
     category: '',

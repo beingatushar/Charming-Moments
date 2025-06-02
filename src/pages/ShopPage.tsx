@@ -4,14 +4,14 @@ import ProductList from '../components/ProductList';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HeroSection from '../components/HeroSection';
-import useProductStore from '../store/productStore';
 import { Product } from '../types';
 import Spinner from '../components/Spinner';
+import { useProduct } from '../hooks/useProduct';
 
 const ShopPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category');
-  const { fetchAllProducts } = useProductStore();
+  const { fetchAllProducts } = useProduct();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);

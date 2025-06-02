@@ -13,12 +13,10 @@ interface CategorySliderProps {
     name: string;
     products: Product[];
   };
-  onAddToCart: (product: Product) => void;
 }
 
 const CategorySlider: React.FC<CategorySliderProps> = ({
   category,
-  onAddToCart,
 }) => {
   const navButtonStyles =
     'absolute top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition duration-300';
@@ -55,7 +53,6 @@ const CategorySlider: React.FC<CategorySliderProps> = ({
             <SwiperSlide key={product.id} className="py-4 rounded-4xl">
               <ProductCard
                 product={product}
-                onAddToCart={onAddToCart}
                 variant="compact"
                 imageClassName="h-40"
               />

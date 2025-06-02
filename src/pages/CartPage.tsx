@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import useCartStore from '../store/cartStore';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AddressForm from '../components/AddressForm';
 import { generateCheckoutMessage } from '../utils/utils';
+import { useCart } from '../hooks/useCart';
 
 // CartItem Component
 interface CartItemProps {
@@ -109,7 +109,7 @@ const EmptyCart: React.FC = () => (
 );
 
 const CartPage: React.FC = () => {
-  const { cart, removeFromCart, updateQuantity, clearCart } = useCartStore();
+  const {cart} = useCart();
   const { form, errors, updateField, validate } = useAddressForm();
 
   const totalPrice = cart.reduce(
@@ -157,7 +157,7 @@ const CartPage: React.FC = () => {
         <Footer />
       </div>
     );
-
+const{removeFromCart,updateQuantity,clearCart}=useCart();
   return (
     <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
       <Header />

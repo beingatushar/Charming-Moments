@@ -3,16 +3,14 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HeroSection from '../components/HeroSection';
 import CategorySlider from '../components/CategorySlider';
-import useCartStore from '../store/cartStore';
 import toast from 'react-hot-toast';
-import useProductStore from '../store/productStore';
 import Spinner from '../components/Spinner'; // Ensure Spinner is imported
 import { Product } from '../types';
+import { useProduct } from '../hooks/useProduct';
 
 const HomePage: React.FC = () => {
   // Destructure and provide better names for clarity
-  const { fetchAllProducts, loading } = useProductStore();
-  const { addToCart } = useCartStore();
+  const { fetchAllProducts, loading } = useProduct();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
   // Fetch products and handle loading
@@ -43,17 +41,6 @@ const HomePage: React.FC = () => {
       .slice(0, 5),
   }));
 
-  // Handle adding products to the cart
-  const handleAddToCart = (product: Product) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image || 'https://via.placeholder.com/150', // Default placeholder image
-      quantity: 1,
-    });
-    toast.success(`${product.name} added to cart!`);
-  };
 
   return (
     <div className="font-sans bg-gray-50 min-h-screen">
@@ -75,7 +62,6 @@ const HomePage: React.FC = () => {
             <CategorySlider
               key={category.name}
               category={category}
-              onAddToCart={handleAddToCart} // Pass down the add to cart handler
             />
           ))
         )}
