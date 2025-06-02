@@ -28,7 +28,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
           {category.replace(/-/g, ' ')}
         </h2>
         <Link
-          to={`/shop?category=${category}`}
+          to={`/shop?categories=${encodeURI([category].toString())}`}
           className="text-pink-500 hover:text-pink-700"
         >
           View All
