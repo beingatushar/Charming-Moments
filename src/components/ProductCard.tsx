@@ -40,20 +40,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <div
         className={clsx(
-          'p-5 flex flex-col justify-between flex-grow',
-          variant === 'compact' && 'p-4'
+          'p-3 rounded-2xl shadow-md bg-white grid grid-rows-[auto_1fr_auto] gap-4 transition-all',
+          variant === 'compact' && 'p-2'
         )}
       >
-        <div>
+        <div className="space-y-2">
           <h3 className="text-lg font-semibold text-gray-800 hover:text-pink-600 transition-colors line-clamp-2">
             <Link to={`/product/${product.id}`}>{product.name}</Link>
           </h3>
-          <p className="mt-2 text-gray-600 font-medium">Rs {product.price}</p>
+          <p className="text-gray-700 font-medium text-base">
+            ₹{product.price}
+          </p>
 
-          {variant === 'default' && product!.features!.length > 0 && (
-            <ul className="mt-3 space-y-1 text-sm text-gray-500">
-              {product!.features!.map((feature, index) => (
-                <li key={index}>• {feature}</li>
+          {variant === 'default' && product?.features?.length! > 0 && (
+            <ul className="mt-2 space-y-1 text-sm text-gray-500 list-disc list-inside">
+              {product.features?.map((feature, index) => (
+                <li key={index}>{feature}</li>
               ))}
             </ul>
           )}
@@ -61,20 +63,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <div
           className={clsx(
-            'flex flex-col gap-2',
-            variant === 'default' ? 'mt-5' : 'mt-3'
+            'grid gap-2',
+            variant === 'default' ? 'mt-4' : 'mt-3'
           )}
         >
           <Link
             to={`/product/${product.id}`}
-            className="text-center bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-md text-sm font-semibold transition-colors"
+            className="w-full text-center bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-xl text-sm font-semibold shadow-sm transition"
           >
             View Details
           </Link>
           <button
             onClick={() => handleAddToCart(product)}
             aria-label={`Add ${product.name} to cart`}
-            className="text-center bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-md text-sm font-semibold transition-colors"
+            className="w-full text-center bg-gray-900 hover:bg-gray-700 text-white py-2 rounded-xl text-sm font-semibold shadow-sm transition"
           >
             Add to Cart
           </button>
