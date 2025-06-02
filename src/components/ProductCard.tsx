@@ -17,7 +17,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   imageClassName = 'h-48',
   variant = 'default',
 }) => {
-  const {handleAddToCart} = useCart();
+  const { handleAddToCart } = useCart();
   return (
     <div
       className={clsx(

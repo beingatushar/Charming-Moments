@@ -16,7 +16,7 @@ interface ProductListProps {
 const ProductList: React.FC<ProductListProps> = ({ products }) => {
   const { loading } = useProduct();
   const [searchParams, setSearchParams] = useSearchParams();
-  const {handleAddToCart} = useCart();
+  const { handleAddToCart } = useCart();
 
   const sortBy = searchParams.get('sortBy') || 'default';
   const selectedCategory = searchParams.get('category');
@@ -147,9 +147,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
         {sortedProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}/>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </div>

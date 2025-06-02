@@ -15,9 +15,7 @@ interface CategorySliderProps {
   };
 }
 
-const CategorySlider: React.FC<CategorySliderProps> = ({
-  category,
-}) => {
+const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
   const navButtonStyles =
     'absolute top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition duration-300';
 

@@ -196,7 +196,7 @@ interface ProductInformationProps {
 }
 
 const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
-  const{handleAddToCart}=useCart();
+  const { handleAddToCart } = useCart();
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
@@ -220,7 +220,7 @@ const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
         <span className="font-bold">Rating:</span> {product.rating}/5
       </p>
       <button
-        onClick={()=>handleAddToCart(product)}
+        onClick={() => handleAddToCart(product)}
         className="w-full bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300"
       >
         Add to Cart

@@ -41,7 +41,6 @@ const HomePage: React.FC = () => {
       .slice(0, 5),
   }));
 
-
   return (
     <div className="font-sans bg-gray-50 min-h-screen">
       <Header />
@@ -59,10 +58,7 @@ const HomePage: React.FC = () => {
         ) : (
           // Render category sliders dynamically
           categoryProducts.map((category) => (
-            <CategorySlider
-              key={category.name}
-              category={category}
-            />
+            <CategorySlider key={category.name} category={category} />
           ))
         )}
       </section>
