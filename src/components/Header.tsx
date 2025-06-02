@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  FaBars,
-  FaTimes,
-  FaShoppingCart,
-  FaUser,
-  FaShoppingBag,
-} from 'react-icons/fa';
+import { FaBars, FaTimes, FaShoppingBag } from 'react-icons/fa';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

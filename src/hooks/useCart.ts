@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { Product } from '../types';
 import useCartStore from '../stores/useCartStore';
 
 export const useCart = () => {

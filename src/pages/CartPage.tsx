@@ -109,7 +109,7 @@ const EmptyCart: React.FC = () => (
 );
 
 const CartPage: React.FC = () => {
-  const { cart } = useCart();
+  const { removeFromCart, updateQuantity, clearCart, cart } = useCart();
   const { form, errors, updateField, validate } = useAddressForm();
 
   const totalPrice = cart.reduce(
@@ -157,7 +157,6 @@ const CartPage: React.FC = () => {
         <Footer />
       </div>
     );
-  const { removeFromCart, updateQuantity, clearCart } = useCart();
   return (
     <div className="font-sans bg-gray-50 min-h-screen flex flex-col">
       <Header />

@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
 import axios, { AxiosError } from 'axios';
-import { ApiError, Product } from '../types';
+import { ApiError, Product, ProductSortOption } from '../types';
 
-// Helper function for error handling
 const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     const err = error as AxiosError<ApiError>;
@@ -15,12 +14,47 @@ export const useProduct = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAllProducts = useCallback(async (): Promise<Product[]> => {
+  // Fetch all products with optional filtering and sorting
+  const fetchAllProducts = useCallback(
+    async (options?: {
+      categories?: string[];
+      sortBy?: ProductSortOption;
+    }): Promise<Product[]> => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const params = new URLSearchParams();
+
+        if (options?.categories) {
+          params.append('category', JSON.stringify(options.categories));
+        }
+
+        if (options?.sortBy) {
+          params.append('sortBy', options.sortBy);
+        }
+
+        const url = `${import.meta.env.VITE_BACKEND_URL}/api/products?${params.toString()}`;
+        const response = await axios.get<Product[]>(url);
+        setLoading(false);
+        return response.data;
+      } catch (error: unknown) {
+        const errorMessage = handleApiError(error);
+        setError(errorMessage);
+        setLoading(false);
+        throw new Error(errorMessage);
+      }
+    },
+    []
+  );
+
+  // Get all unique product categories
+  const getAllCategories = useCallback(async (): Promise<string[]> => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get<Product[]>(
-        `${import.meta.env.VITE_BACKEND_URL}/api/products`
+      const response = await axios.get<string[]>(
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/category`
       );
       setLoading(false);
       return response.data;
@@ -32,7 +66,8 @@ export const useProduct = () => {
     }
   }, []);
 
-  const findById = useCallback(async (id: string): Promise<Product> => {
+  // Get product by ID
+  const getProductById = useCallback(async (id: string): Promise<Product> => {
     setLoading(true);
     setError(null);
     try {
@@ -49,17 +84,15 @@ export const useProduct = () => {
     }
   }, []);
 
+  // Create new product
   const createProduct = useCallback(
-    async (newProduct: Partial<Product>): Promise<Product> => {
+    async (productData: Partial<Product>): Promise<Product> => {
       setLoading(true);
       setError(null);
       try {
-        const productToCreate = newProduct.id
-          ? newProduct
-          : { ...newProduct, id: 'temp-here' };
         const response = await axios.post<Product>(
           `${import.meta.env.VITE_BACKEND_URL}/api/products`,
-          productToCreate
+          productData
         );
         setLoading(false);
         return response.data;
@@ -73,14 +106,15 @@ export const useProduct = () => {
     []
   );
 
+  // Update existing product
   const updateProduct = useCallback(
-    async (id: string, updatedProduct: Partial<Product>): Promise<Product> => {
+    async (id: string, updateData: Partial<Product>): Promise<Product> => {
       setLoading(true);
       setError(null);
       try {
         const response = await axios.put<Product>(
           `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
-          updatedProduct
+          updateData
         );
         setLoading(false);
         return response.data;
@@ -94,7 +128,8 @@ export const useProduct = () => {
     []
   );
 
-  const deleteProduct = useCallback(async (id: string): Promise<string> => {
+  // Soft delete product
+  const deleteProduct = useCallback(async (id: string): Promise<void> => {
     setLoading(true);
     setError(null);
     try {
@@ -102,7 +137,6 @@ export const useProduct = () => {
         `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`
       );
       setLoading(false);
-      return `Product ${id} deleted successfully`;
     } catch (error: unknown) {
       const errorMessage = handleApiError(error);
       setError(errorMessage);
@@ -111,6 +145,29 @@ export const useProduct = () => {
     }
   }, []);
 
+  // Clean product data (admin function)
+  const cleanProducts = useCallback(async (): Promise<{
+    updatedCount: number;
+    totalProducts: number;
+  }> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post<{
+        updatedCount: number;
+        totalProducts: number;
+      }>(`${import.meta.env.VITE_BACKEND_URL}/api/products/clean`);
+      setLoading(false);
+      return response.data;
+    } catch (error: unknown) {
+      const errorMessage = handleApiError(error);
+      setError(errorMessage);
+      setLoading(false);
+      throw new Error(errorMessage);
+    }
+  }, []);
+
+  // Image upload to Cloudinary
   const uploadImage = useCallback(async (imageFile: File): Promise<string> => {
     setLoading(true);
     setError(null);
@@ -172,10 +229,12 @@ export const useProduct = () => {
     loading,
     error,
     fetchAllProducts,
-    findById,
+    getAllCategories,
+    getProductById,
     createProduct,
     updateProduct,
     deleteProduct,
+    cleanProducts,
     uploadImage,
   };
 };

@@ -1,32 +1,34 @@
 // components/CategorySlider.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import { Product } from '../types';
-import clsx from 'clsx';
 import { ProductCard } from './ProductCard';
+import { useProduct } from '../hooks/useProduct';
 
 interface CategorySliderProps {
-  category: {
-    name: string;
-    products: Product[];
-  };
+  category: string;
 }
 
 const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
-  const navButtonStyles =
-    'absolute top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow-lg hover:bg-gray-100 transition duration-300';
-
+  const [products, setProducts] = useState<Product[]>([]);
+  const { fetchAllProducts } = useProduct();
+  useEffect(() => {
+    const initialize = async () => {
+      setProducts(await fetchAllProducts({ categories: [category] }));
+    };
+    initialize();
+  });
   return (
     <div className="font-sans px-4 py-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl font-bold text-gray-800">
-          {category.name.replace(/-/g, ' ')}
+          {category.replace(/-/g, ' ')}
         </h2>
         <Link
-          to={`/shop?category=${category.name}`}
+          to={`/shop?category=${category}`}
           className="text-pink-500 hover:text-pink-700"
         >
           View All
@@ -37,8 +39,8 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
           spaceBetween={16}
           slidesPerView={2}
           navigation={{
-            nextEl: `.next-button-${category.name}`,
-            prevEl: `.prev-button-${category.name}`,
+            nextEl: `.next-button-${category}`,
+            prevEl: `.prev-button-${category}`,
           }}
           modules={[Navigation]}
           breakpoints={{
@@ -47,7 +49,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
             1024: { slidesPerView: 4 },
           }}
         >
-          {category.products.map((product) => (
+          {products.map((product) => (
             <SwiperSlide key={product.id} className="py-4 rounded-4xl">
               <ProductCard
                 product={product}

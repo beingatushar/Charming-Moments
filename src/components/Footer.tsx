@@ -7,7 +7,6 @@ import {
   FaEnvelope,
   FaPhone,
 } from 'react-icons/fa'; // Import icons
-import clsx from 'clsx'; // For cleaner class management
 
 const Footer: React.FC = () => {
   const socialLinks = {
@@ -20,8 +19,6 @@ const Footer: React.FC = () => {
     'text-gray-400 hover:text-pink-500 transition duration-300';
   const iconStyles =
     'text-gray-400 hover:text-pink-500 transition duration-300';
-  const buttonStyles =
-    'bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition duration-300';
 
   return (
     <footer className="bg-gray-900 text-white mt-16 py-12">

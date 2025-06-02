@@ -24,3 +24,17 @@ export interface CartItem {
 export interface ApiError {
   message: string;
 }
+export type ProductSortOption =
+  | 'price-low-to-high'
+  | 'price-high-to-low'
+  | 'date-added-newest'
+  | 'date-added-oldest'
+  | 'rating-high-to-low'
+  | 'name-a-z'
+  | 'name-z-a'
+  | undefined;
+
+export interface ApiError {
+  message: string;
+  errors?: Record<string, string[]>;
+}

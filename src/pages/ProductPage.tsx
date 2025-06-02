@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Product } from '../types';
 import Spinner from '../components/Spinner';
 import { FaSearchMinus, FaSearchPlus } from 'react-icons/fa';
-import { useStore } from 'zustand';
 import { useCart } from '../hooks/useCart';
 import { useProduct } from '../hooks/useProduct';
 
@@ -246,7 +244,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => (
 // ProductPage Component
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { findById, loading } = useProduct();
+  const { getProductById, loading } = useProduct();
   const [product, setProduct] = useState<Product | undefined>(undefined);
 
   // Fetch product details on load
@@ -254,21 +252,14 @@ const ProductPage: React.FC = () => {
     const loadProduct = async () => {
       if (!productId) return;
       try {
-        const fetchedProduct = await findById(productId);
+        const fetchedProduct = await getProductById(productId);
         setProduct(fetchedProduct);
       } catch (err) {
         console.error('Error fetching product:', err);
       }
     };
     loadProduct();
-  }, [productId, findById]);
-
-  const handleAddToCart = (product: Product) => {
-    if (product) {
-      handleAddToCart(product);
-      toast.success(`${product.name} added to cart!`);
-    }
-  };
+  }, [productId, getProductById]);
 
   return (
     <div className="font-sans">

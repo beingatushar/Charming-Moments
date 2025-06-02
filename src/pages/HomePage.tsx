@@ -5,41 +5,26 @@ import HeroSection from '../components/HeroSection';
 import CategorySlider from '../components/CategorySlider';
 import toast from 'react-hot-toast';
 import Spinner from '../components/Spinner'; // Ensure Spinner is imported
-import { Product } from '../types';
 import { useProduct } from '../hooks/useProduct';
 
 const HomePage: React.FC = () => {
   // Destructure and provide better names for clarity
-  const { fetchAllProducts, loading } = useProduct();
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-
+  const { getAllCategories, loading } = useProduct();
+  const [allCategories, setAllCategories] = useState<string[]>([]);
   // Fetch products and handle loading
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadCategories = async () => {
       try {
-        const products = await fetchAllProducts();
-        setAllProducts(products);
+        const categories = await getAllCategories();
+        setAllCategories(categories);
       } catch (error) {
         console.error('Error fetching products:', error);
         toast.error('Failed to load products. Please try again.');
       }
     };
 
-    loadProducts();
-  }, [fetchAllProducts]);
-
-  // Dynamically generate unique categories
-  const categories = Array.from(
-    new Set(allProducts.map((product) => product.category))
-  );
-
-  // Organize products into categories and limit to 5 products per category
-  const categoryProducts = categories.map((category) => ({
-    name: category,
-    products: allProducts
-      .filter((product) => product.category === category)
-      .slice(0, 5),
-  }));
+    loadCategories();
+  }, [getAllCategories]);
 
   return (
     <div className="font-sans bg-gray-50 min-h-screen">
@@ -57,8 +42,8 @@ const HomePage: React.FC = () => {
           <Spinner />
         ) : (
           // Render category sliders dynamically
-          categoryProducts.map((category) => (
-            <CategorySlider key={category.name} category={category} />
+          allCategories.map((category) => (
+            <CategorySlider key={category} category={category} />
           ))
         )}
       </section>
