@@ -13,6 +13,7 @@ export interface Product {
   tags?: string[];
   material?: string;
   isDeleted: boolean;
+  numberOfClicks: number;
 }
 export interface CartItem {
   id: string;
