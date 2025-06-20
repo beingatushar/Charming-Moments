@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { Product } from '../types';
 import clsx from 'clsx';
-import { useCart } from '../hooks/useCart';
+import useCartStore from '../stores/useCartStore';
 
 interface ProductCardProps {
   product: Product;
@@ -17,7 +17,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   imageClassName = 'h-48',
   variant = 'default',
 }) => {
-  const { handleAddToCart } = useCart();
+  const { handleAddToCart } = useCartStore();
   return (
     <div
       className={clsx(

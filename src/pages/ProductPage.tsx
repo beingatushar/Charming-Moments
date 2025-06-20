@@ -5,8 +5,8 @@ import Footer from '../components/Footer';
 import { Product } from '../types';
 import Spinner from '../components/Spinner';
 import { FaSearchMinus, FaSearchPlus } from 'react-icons/fa';
-import { useCart } from '../hooks/useCart';
-import { useProduct } from '../hooks/useProduct';
+import { useProductStore } from '../stores/useProductStore';
+import useCartStore from '../stores/useCartStore';
 
 // ProductNotFound Component
 const ProductNotFound: React.FC = () => (
@@ -194,7 +194,7 @@ interface ProductInformationProps {
 }
 
 const ProductInformation: React.FC<ProductInformationProps> = ({ product }) => {
-  const { handleAddToCart } = useCart();
+  const { handleAddToCart } = useCartStore();
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
@@ -244,7 +244,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => (
 // ProductPage Component
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { getProductById, loading } = useProduct();
+  const { getProductById, loading } = useProductStore();
   const [product, setProduct] = useState<Product | undefined>(undefined);
 
   // Fetch product details on load

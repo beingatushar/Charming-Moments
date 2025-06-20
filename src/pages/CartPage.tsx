@@ -4,8 +4,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AddressForm from '../components/AddressForm';
 import { generateCheckoutMessage } from '../utils/utils';
-import { useCart } from '../hooks/useCart';
-
+import useCartStore from '../stores/useCartStore';
 // CartItem Component
 interface CartItemProps {
   item: {
@@ -109,7 +108,7 @@ const EmptyCart: React.FC = () => (
 );
 
 const CartPage: React.FC = () => {
-  const { removeFromCart, updateQuantity, clearCart, cart } = useCart();
+  const { removeFromCart, updateQuantity, clearCart, cart } = useCartStore();
   const { form, errors, updateField, validate } = useAddressForm();
 
   const totalPrice = cart.reduce(
