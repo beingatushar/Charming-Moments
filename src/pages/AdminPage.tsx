@@ -7,7 +7,7 @@ import HeroSection from '../components/HeroSection';
 import { Product } from '../types';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import { useProduct } from '../hooks/useProduct';
+import { useProductStore } from '../stores/useProductStore';
 
 // ProductForm Component
 interface ProductFormProps {
@@ -29,8 +29,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const { loading } = useProduct();
-
+  const [loading, setLoading] = useState<boolean>(false);
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 mb-8">
       <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -285,7 +284,7 @@ const AdminPage: React.FC = () => {
     updateProduct,
     deleteProduct,
     uploadImage,
-  } = useProduct();
+  } = useProductStore();
 
   const initialProduct = () => ({
     category: '',
@@ -295,7 +294,7 @@ const AdminPage: React.FC = () => {
     // stock: 0,
     image: '',
   });
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [newProduct, setNewProduct] =
     useState<Partial<Product>>(initialProduct());
@@ -316,7 +315,9 @@ const AdminPage: React.FC = () => {
         toast.dismiss(loadingToast);
       }
     };
+    setLoading(true);
     loadProducts();
+    setLoading(false);
   }, [fetchAllProducts]);
 
   const handleInputChange = (

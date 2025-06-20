@@ -5,26 +5,29 @@ import HeroSection from '../components/HeroSection';
 import CategorySlider from '../components/CategorySlider';
 import toast from 'react-hot-toast';
 import Spinner from '../components/Spinner'; // Ensure Spinner is imported
-import { useProduct } from '../hooks/useProduct';
+import { useProductStore } from '../stores/useProductStore';
 
 const HomePage: React.FC = () => {
   // Destructure and provide better names for clarity
-  const { getAllCategories, loading } = useProduct();
+  const getAllCategories = useProductStore((state) => state.getAllCategories);
+  const [loading, setLoading] = useState<boolean>(false);
   const [allCategories, setAllCategories] = useState<string[]>([]);
   // Fetch products and handle loading
   useEffect(() => {
     const loadCategories = async () => {
       try {
+        setLoading(true);
         const categories = await getAllCategories();
         setAllCategories(categories);
       } catch (error) {
         console.error('Error fetching products:', error);
         toast.error('Failed to load products. Please try again.');
+      } finally {
+        setLoading(false);
       }
     };
-
     loadCategories();
-  }, [getAllCategories]);
+  }, []);
 
   return (
     <div className="font-sans bg-gray-50 min-h-screen">

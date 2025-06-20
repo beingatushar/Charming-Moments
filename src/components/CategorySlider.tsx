@@ -1,4 +1,3 @@
-// components/CategorySlider.tsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -6,7 +5,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import { Product } from '../types';
 import { ProductCard } from './ProductCard';
-import { useProduct } from '../hooks/useProduct';
+import { useProductStore } from '../stores/useProductStore';
 
 interface CategorySliderProps {
   category: string;
@@ -14,13 +13,31 @@ interface CategorySliderProps {
 
 const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const { fetchAllProducts } = useProduct();
+  const [loading, setLoading] = useState<boolean>(false);
+  const fetchAllProducts = useProductStore((state) => state.fetchAllProducts);
+
   useEffect(() => {
-    const initialize = async () => {
-      setProducts(await fetchAllProducts({ categories: [category] }));
+    // let isMounted = true;
+
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const fetchedProducts = await fetchAllProducts({
+          categories: [category],
+        });
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error('Error loading products:', error);
+      } finally {
+        setLoading(false);
+      }
     };
-    initialize();
-  });
+
+    loadProducts();
+  }, []);
+
+  if (loading) return <p className="text-center py-4">Loading...</p>;
+
   return (
     <div className="font-sans px-4 py-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-4">
@@ -28,7 +45,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
           {category.replace(/-/g, ' ')}
         </h2>
         <Link
-          to={`/shop?categories=${encodeURI([category].toString())}`}
+          to={`/shop?categories=${encodeURI(category)}`}
           className="text-pink-500 hover:text-pink-700"
         >
           View All
@@ -51,11 +68,7 @@ const CategorySlider: React.FC<CategorySliderProps> = ({ category }) => {
         >
           {products.map((product) => (
             <SwiperSlide key={product.id} className="py-4 rounded-4xl">
-              <ProductCard
-                product={product}
-                variant="compact"
-                // imageClassName="h-40"
-              />
+              <ProductCard product={product} variant="compact" />
             </SwiperSlide>
           ))}
         </Swiper>

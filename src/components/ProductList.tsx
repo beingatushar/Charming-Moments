@@ -3,9 +3,10 @@ import { useSearchParams } from 'react-router-dom';
 import clsx from 'clsx';
 import Spinner from './Spinner';
 import { ProductCard } from './ProductCard';
-import { useCart } from '../hooks/useCart';
-import { useProduct } from '../hooks/useProduct';
+
 import { Product, ProductSortOption } from '../types';
+import { useProductStore } from '../stores/useProductStore';
+import useCartStore from '../stores/useCartStore';
 
 const SORT_OPTIONS: { label: string; value: ProductSortOption | 'default' }[] =
   [
@@ -20,11 +21,12 @@ const SORT_OPTIONS: { label: string; value: ProductSortOption | 'default' }[] =
   ];
 
 const ProductList: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { fetchAllProducts, getAllCategories, loading } = useProduct();
-  useCart();
+  const { fetchAllProducts, getAllCategories } = useProductStore();
+  useCartStore();
 
   const sortBy = searchParams.get('sortBy') || '';
   const selectedCategories = useMemo(() => {
@@ -71,6 +73,7 @@ const ProductList: React.FC = () => {
   }, [getAllCategories]);
 
   useEffect(() => {
+    setLoading(true);
     fetchAllProducts({
       categories:
         selectedCategories.length > 0 ? selectedCategories : undefined,
@@ -78,6 +81,8 @@ const ProductList: React.FC = () => {
     })
       .then(setProducts)
       .catch(console.error);
+
+    setLoading(false);
   }, [fetchAllProducts, selectedCategories, sortBy]);
 
   const getCategoryButtonClass = (isSelected: boolean) =>
