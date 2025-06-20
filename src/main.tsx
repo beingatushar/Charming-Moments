@@ -4,7 +4,4 @@ import App from './App';
 // Check if the root element exists before rendering
 const rootElement = document.getElementById('root');
 
-if (rootElement) {
-  createRoot(rootElement).render(<App />);
-} else {
-}
+createRoot(rootElement!).render(<App />);

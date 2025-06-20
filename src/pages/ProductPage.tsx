@@ -244,8 +244,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => (
 // ProductPage Component
 const ProductPage: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const { getProductById, loading } = useProductStore();
+  const { getProductById } = useProductStore();
   const [product, setProduct] = useState<Product | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch product details on load
   useEffect(() => {
@@ -258,7 +259,9 @@ const ProductPage: React.FC = () => {
         console.error('Error fetching product:', err);
       }
     };
+    setLoading(true);
     loadProduct();
+    setLoading(false);
   }, [productId, getProductById]);
 
   return (
