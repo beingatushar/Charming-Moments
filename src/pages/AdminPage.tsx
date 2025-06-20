@@ -376,8 +376,8 @@ const AdminPage: React.FC = () => {
         );
         toast.success('Product updated successfully!');
       } else {
-        const productWithId = { ...newProduct, id: `temp-${Date.now()}` };
-        const createdProduct = await createProduct(productWithId);
+        // const productWithId = { ...newProduct, id: `temp-${Date.now()}` };
+        const createdProduct = await createProduct(newProduct);
         setProducts((prevProducts) => [...prevProducts, createdProduct]);
         toast.success('Product added successfully!');
       }
