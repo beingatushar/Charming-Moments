@@ -11,9 +11,8 @@ const Header: React.FC = () => {
   };
 
   const isActive = (path: string) => location.pathname === path;
-
   const linkStyles =
-    'text-gray-800 hover:text-pink-500 transition duration-300';
+    'transition-all duration-300 hover:text-pink-500 hover:bg-opacity-20 hover:-translate-y-1';
   const activeLinkStyles = 'text-pink-500 font-bold';
 
   // Navigation links with labels
@@ -27,12 +26,12 @@ const Header: React.FC = () => {
   // Separate cart icon from text links
 
   return (
-    <header className="bg-white bg-opacity-90 backdrop-blur-md fixed w-full z-50 shadow-sm">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+    <header className="bg-black bg-opacity-40 backdrop-blur-md fixed w-full z-50 shadow-sm text-white">
+      <div className="container  mx-auto px-6 py-4 flex justify-between items-center">
         {/* Mobile Menu Toggle */}
         <button
           onClick={toggleMenu}
-          className="md:hidden text-gray-800 hover:text-pink-500 focus:outline-none"
+          className="md:hidden hover:text-pink-500 focus:outline-none"
         >
           {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
@@ -40,7 +39,7 @@ const Header: React.FC = () => {
 
         <Link
           to="/"
-          className="text-2xl font-bold text-gray-800 hover:text-pink-500 transition duration-300"
+          className="text-2xl font-bold hover:text-pink-500 transition duration-300 bg-black bg-opacity-[0.02] py-1 px-2 rounded"
         >
           Charming Moments
         </Link>

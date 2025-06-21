@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import HeroSection from '../components/HeroSection';
-
+import aboutImage from '../assets/shop.png';
 // TeamMember Component
 interface TeamMemberProps {
   member: {
@@ -106,7 +106,7 @@ const AboutPage: React.FC = () => (
     <Header />
 
     {/* Hero Section */}
-    <HeroSection title="About Us" backgroundImage="" />
+    <HeroSection title="About Us" backgroundImage={aboutImage} />
 
     {/* About Content */}
     <AboutContent />

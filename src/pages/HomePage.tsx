@@ -6,6 +6,7 @@ import CategorySlider from '../components/CategorySlider';
 import toast from 'react-hot-toast';
 import Spinner from '../components/Spinner'; // Ensure Spinner is imported
 import { useProductStore } from '../stores/useProductStore';
+import homepageImage from '../assets/logo.png';
 
 const HomePage: React.FC = () => {
   // Destructure and provide better names for clarity
@@ -36,7 +37,7 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <HeroSection
         title="Discover Handmade Elegance & Sweet Indulgences"
-        backgroundImage="https://via.placeholder.com/1200x400"
+        backgroundImage={homepageImage}
       />
 
       <section className="container mx-auto px-6 py-8">
